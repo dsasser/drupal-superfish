@@ -1,4 +1,3 @@
-/* $Id$ */
 /*
  * Supersubs v0.2b - jQuery plugin
  * Copyright (c) 2008 Joel Birch
