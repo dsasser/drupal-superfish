@@ -75,7 +75,7 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
         '#title' => t('Menu Depth'),
         '#description' => t('The number of child levels starting with the parent selected above. <strong>-1</strong> means all of them, <strong>0</strong> means none of them.'),
         '#default_value' => variable_get('superfish_depth_'. $delta, -1),
-        '#options' => drupal_map_assoc(range(-1, 20)),
+        '#options' => drupal_map_assoc(range(-1, 10)),
       );
       $form['sf-settings']['superfish_type_'. $delta] = array(
         '#type' => 'select',
@@ -131,7 +131,7 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
         '#title' => t('Path levels'),
         '#description' => t('The number of levels of submenus that remain open or are restored using <strong>Path class</strong>. <em>(Default: 1)</em>'),
         '#default_value' => variable_get('superfish_pathlevels_'. $delta, 1),
-        '#options' => drupal_map_assoc(range(1, 20)),
+        '#options' => drupal_map_assoc(range(1, 10)),
       );
       $form['sf-settings']['superfish_slide_'. $delta] = array(
         '#type' => 'select',
@@ -251,14 +251,14 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
         '#title' => t('Start from depth'),
         '#description' => t('The depth of the first instance of multi-column sub-menus. <em>(Default: 1)</em>'),
         '#default_value' => variable_get('superfish_mcdepth_'. $delta, 1),
-        '#options' => drupal_map_assoc(range(1, 20)),
+        '#options' => drupal_map_assoc(range(1, 10)),
       );
       $form['sf-megamenu']['superfish_mclevels_'. $delta] = array(
         '#type' => 'select',
         '#title' => t('Levels'),
         '#description' => t('The number of levels of sub-menus that will be included in the multi-column sub-menu. <em>(Default: 1)</em>'),
         '#default_value' => variable_get('superfish_mclevels_'. $delta, 1),
-        '#options' => drupal_map_assoc(range(1, 20)),
+        '#options' => drupal_map_assoc(range(1, 10)),
       );
       $form['sf-advanced-html'] = array(
         '#type' => 'fieldset',
@@ -561,7 +561,9 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
         drupal_add_js($javascript, 'inline');
         // Adding required CSS files
         if ($sfsettings['style'] != 'none') {
-          drupal_add_css(libraries_get_path('superfish') .'/style/'. $sfsettings['style'] .'.css');
+          if (module_exists('libraries')) {
+            drupal_add_css(libraries_get_path('superfish') .'/style/'. $sfsettings['style'] .'.css');
+          }
         }
         $extracss = variable_get('superfish_pathcss_'. $delta, '');
         if ($extracss) {
@@ -672,21 +674,23 @@ function superfish_block_validate($form, &$form_state) {
  * Implements hook_init().
  */
 function superfish_init() {
-  $sf_library = variable_get('superfish_slp',
-    libraries_get_path('superfish') ."/jquery.hoverIntent.minified.js\n".
-    libraries_get_path('superfish') ."/jquery.bgiframe.min.js\n".
-    libraries_get_path('superfish') ."/superfish.js\n".
-    libraries_get_path('superfish') ."/supersubs.js\n".
-    libraries_get_path('superfish') ."/supposition.js\n".
-    libraries_get_path('superfish') ."/sftouchscreen.js");
-  $sf_library = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", trim($sf_library));
-  $sf_library = explode("\n", $sf_library);
-  foreach ($sf_library as $s) {
-    drupal_add_js($s);
+  if (module_exists('libraries')) {
+    $sf_library = variable_get('superfish_slp',
+      libraries_get_path('superfish') ."/jquery.hoverIntent.minified.js\n".
+      libraries_get_path('superfish') ."/jquery.bgiframe.min.js\n".
+      libraries_get_path('superfish') ."/superfish.js\n".
+      libraries_get_path('superfish') ."/supersubs.js\n".
+      libraries_get_path('superfish') ."/supposition.js\n".
+      libraries_get_path('superfish') ."/sftouchscreen.js");
+    $sf_library = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", trim($sf_library));
+    $sf_library = explode("\n", $sf_library);
+    foreach ($sf_library as $s) {
+      drupal_add_js($s);
+    }
+    drupal_add_css(libraries_get_path('superfish') .'/css/superfish.css');
+    drupal_add_css(libraries_get_path('superfish') .'/css/superfish-vertical.css');
+    drupal_add_css(libraries_get_path('superfish') .'/css/superfish-navbar.css');
   }
-  drupal_add_css(libraries_get_path('superfish') .'/css/superfish.css');
-  drupal_add_css(libraries_get_path('superfish') .'/css/superfish-vertical.css');
-  drupal_add_css(libraries_get_path('superfish') .'/css/superfish-navbar.css');
 }
 
 /**
@@ -744,9 +748,6 @@ function theme_superfish($id, $menu_name, $mlid, $sfsettings = NULL) {
   else {
     $cache = array();
     $cache['menu'] = menu_tree_all_data($menu_name);
-    $page_menu = menu_tree_page_data($menu_name);
-    $cache['trail'] = superfish_build_page_trail($page_menu);
-    unset($page_menu);
 
     // For custom $menus and menus built all the way from the top-level we
     // don't need to "create" the specific sub-menu and we need to get the title
@@ -761,7 +762,8 @@ function theme_superfish($id, $menu_name, $mlid, $sfsettings = NULL) {
       for ($p = 1; $p < 10; $p++) {
         if ($sub_mlid = $item["p$p"]) {
           $subitem = menu_link_load($sub_mlid);
-          $cache['menu'] = $cache['menu'][(50000 + $subitem['weight']) .' '. $subitem['title'] .' '. $subitem['mlid']]['below'];
+          $key = (50000 + $subitem['weight']) . ' ' . $subitem['title'] . ' ' . $subitem['mlid'];
+          $cache['menu'] = (isset($cache['menu'][$key]['below'])) ? $cache['menu'][$key]['below'] : $cache['menu'];
         }
       }
     }
@@ -777,8 +779,10 @@ function theme_superfish($id, $menu_name, $mlid, $sfsettings = NULL) {
   $output['subject'] = $cache['title'];
   if ($cache['menu']) {
     // Set the total menu depth counting from this parent if we need it.
-    $depth =  ($sfsettings['depth'] > 0) ? ($cache['parent_depth'] + $sfsettings['depth']) : $sfsettings['depth'];
-    if ($menu_tree = theme('superfish_build', $id, $cache['menu'], $depth, $cache['trail'], $sfsettings)) {
+    $depth = $sfsettings['depth'];
+    $depth = ($sfsettings['depth'] > 0 && isset($cache['parent_depth'])) ? $cache['parent_depth'] + $depth : $depth;
+    $trail = superfish_build_page_trail(menu_tree_page_data($menu_name));
+    if ($menu_tree = theme('superfish_build', $id, $cache['menu'], $depth, $trail, $sfsettings)) {
       if ($menu_tree['content']) {
         // Wrapping main UL
         if ($sfsettings['wrapmul'] && strpos($sfsettings['wrapmul'], ',') !== FALSE) {
@@ -828,17 +832,16 @@ function theme_superfish_build($id, $menu, $depth = -1, $trail = NULL, $sfsettin
   foreach ($menu as $menu_item) {
 
     $show_children = $megamenu_wrapper = $megamenu_column = $megamenu_content = FALSE;
-    $item_class = array();
-    $link_class = explode(' ', $menu_item['link']['localized_options']['attributes']['class']);
+    $item_class = $link_class = array();
     $mlid = $menu_item['link']['mlid'];
 
     if (!isset($menu_item['link']['hidden']) || $menu_item['link']['hidden'] == 0) {
       $item_class[] = ($trail && in_array($mlid, $trail)) ? 'active-trail' : '';
 
       // Add helper classes to the menu items and hyperlinks.
-      $settings['firstlast'] = ($settings['dfirstlast'] == 1 && $total_children == 1) ? '0' : $settings['firstlast'];
+      $settings['firstlast'] = ($settings['dfirstlast'] == 1 && $total_children == 1) ? 0 : $settings['firstlast'];
       $item_class[] = ($settings['firstlast'] == 1) ? (($i == 1) ? 'first' : (($i == $total_children) ? 'last' : 'middle')) : '';
-      $settings['zebra'] = ($settings['dzebra'] == 1 && $total_children == 1) ? '0' : $settings['zebra'];
+      $settings['zebra'] = ($settings['dzebra'] == 1 && $total_children == 1) ? 0 : $settings['zebra'];
       $item_class[] = ($settings['zebra'] == 1) ? (($i % 2) ? 'odd' : 'even') : '';
       $item_class[] = ($settings['itemcount'] == 1) ? 'sf-item-'. $i : '';
       $item_class[] = ($settings['itemdepth'] == 1) ? 'sf-depth-'. $menu_item['link']['depth'] : '';
@@ -939,6 +942,12 @@ function theme_superfish_build($id, $menu, $depth = -1, $trail = NULL, $sfsettin
       }
 
       $item_class = implode(' ', array_filter($item_class));
+
+      if (isset($menu_item['link']['localized_options']['attributes']['class'])) {
+        $link_class_current = explode(' ', $menu_item['link']['localized_options']['attributes']['class']);
+        $link_class = array_merge($link_class_current, array_filter($link_class));
+      }
+     
       $menu_item['link']['localized_options']['attributes']['class'] = implode(' ', array_filter($link_class));
 
       // Render the menu item.
