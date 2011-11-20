@@ -21,7 +21,7 @@ function superfish_requirements($phase) {
   // Ensure translations do not break at install time
   $t = get_t();
 
-  if ($phase == 'install' && !module_exists('libraries')) {
+  if ($phase == 'install' && !drupal_get_path('module', 'libraries')) {
     $requirements['superfish']['severity'] = REQUIREMENT_ERROR;
     $requirements['superfish']['description'] = $t('Superfish module requires the <a href="@url">Libraries module</a> to be installed.', array('@url' => 'http://drupal.org/project/libraries'));
   }
@@ -37,23 +37,12 @@ function superfish_requirements($phase) {
       $requirements['superfish']['severity'] = REQUIREMENT_ERROR;
       $requirements['superfish']['description'] = $t('Please download the Superfish library from <a href="@url">@url</a>.', array('@url' => 'http://drupal.org/project/superfish'));
     }
-    return $requirements;
   }
+  return $requirements;
 }
 
 /**
  * Implements hook_update_N().
  */
 function superfish_update_6100() {
-  $ret = array();
-  $ret[] = update_sql("UPDATE {variable} SET value = REPLACE(REPLACE(value, 'false', '0'), 'true', '1') WHERE name LIKE 'superfish_arrow_%'");
-  $ret[] = update_sql("UPDATE {variable} SET value = REPLACE(REPLACE(value, 'false', '0'), 'true', '1') WHERE name LIKE 'superfish_shadow_%'");
-  $ret[] = update_sql("UPDATE {variable} SET value = REPLACE(REPLACE(value, 'false', 'none'), 'true', 'down') WHERE name LIKE 'superfish_slide_%'");
-  $ret[] = update_sql("UPDATE {variable} SET name = REPLACE(name, 'count', 'itemcount') WHERE name LIKE 'superfish_count_%'");
-  $ret[] = update_sql("UPDATE {variable} SET name = REPLACE(name, 'extracss', 'pathcss') WHERE name LIKE 'superfish_extracss_%'");
-  $ret[] = update_sql("UPDATE {variable} SET name = REPLACE(name, 'extraclass', 'ulclass') WHERE name LIKE 'superfish_extraclass_%'");
-  $ret[] = update_sql("UPDATE {variable} SET name = REPLACE(name, 'linkwrapper', 'wrapli') WHERE name LIKE 'superfish_linkwrapper_%'");
-  $ret[] = update_sql("UPDATE {variable} SET name = REPLACE(name, 'linktextwrapper', 'wraphlt') WHERE name LIKE 'superfish_linktextwrapper_%'");
-  $ret[] = update_sql("UPDATE {variable} SET name = REPLACE(name, 'mulwrapper', 'wrapmul') WHERE name LIKE 'superfish_mulwrapper_%'");
-  return $ret;
 }
