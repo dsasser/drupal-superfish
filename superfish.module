@@ -77,6 +77,11 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
         '#default_value' => variable_get('superfish_depth_'. $delta, -1),
         '#options' => drupal_map_assoc(range(-1, 10)),
       );
+      $form['sf-settings']['superfish_expanded_' . $delta] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Take "Expanded" option into effect.'),
+        '#default_value' => variable_get('superfish_expanded_' . $delta, 0),
+      );
       $form['sf-settings']['superfish_type_'. $delta] = array(
         '#type' => 'select',
         '#title' => t('Menu Type'),
@@ -424,6 +429,7 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
       variable_set('superfish_slide_'. $delta, $edit['superfish_slide_'. $delta]);
       variable_set('superfish_arrow_'. $delta, $edit['superfish_arrow_'. $delta]);
       variable_set('superfish_shadow_'. $delta, $edit['superfish_shadow_'. $delta]);
+      variable_set('superfish_expanded_'. $delta, $edit['superfish_expanded_'. $delta]);
       variable_set('superfish_bgf_'. $delta, $edit['superfish_bgf_'. $delta]);
       variable_set('superfish_spp_'. $delta, $edit['superfish_spp_'. $delta]);
       variable_set('superfish_hid_'. $delta, $edit['superfish_hid_'. $delta]);
@@ -464,6 +470,7 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
       $sfsettings['depth'] = variable_get('superfish_depth_'. $delta, '-1');
       $sfsettings['type'] = variable_get('superfish_type_'. $delta, 'horizontal');
       $sfsettings['style'] = variable_get('superfish_style_'. $delta, 'default');
+      $sfsettings['expanded'] = variable_get('superfish_expanded_'. $delta, 0);
       $sfsettings['firstlast'] = variable_get('superfish_firstlast_'. $delta, 1);
       $sfsettings['zebra'] = variable_get('superfish_zebra_'. $delta, 1);
       $sfsettings['dfirstlast'] = variable_get('superfish_dfirstlast_'. $delta, 0);
@@ -946,7 +953,9 @@ function theme_superfish_build($id, $menu, $depth = -1, $trail = NULL, $sfsettin
         $menu_item['link']['localized_options']['html'] = TRUE;
       }
 
-      if (!empty($menu_item['link']['has_children']) && !empty($menu_item['below']) && $depth != 0) {
+      $expanded = ($sfsettings['expanded'] == 1) ? (($menu_item['link']['expanded'] == 1) ? TRUE : FALSE) : TRUE;
+
+      if (!empty($menu_item['link']['has_children']) && !empty($menu_item['below']) && $depth != 0 && $expanded === TRUE) {
         // Megamenu is still beta, there is a good chance much of this will be changed.
         if (!empty($settings['megamenu_exclude'])) {
           if (is_array($settings['megamenu_exclude'])) {
