@@ -813,7 +813,9 @@ function theme_superfish($id, $menu_name, $mlid, $sfsettings = NULL) {
       $cache['title'] = check_plain($result);
     }
     cache_set($cache_key, $cache, 'cache_menu');
-    $cache = cache_get($cache_key, 'cache_menu')->data;
+    if (cache_get($cache_key, 'cache_menu')->data != $cache) {
+      watchdog('superfish', t('Cache subsystem is broken; could not retrieve data from cache_get() immediately after cache_set().'), array(), WATCHDOG_ERROR);
+    }
   }
 
   $output['content'] = '';
