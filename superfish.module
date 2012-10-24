@@ -761,6 +761,16 @@ function superfish_theme() {
 }
 
 /**
+ * Implements hook_i18nmenu_node_block_info_alter().
+ */
+function superfish_i18nmenu_node_block_info_alter(&$info) {
+  // Allows the superfish menu block to be translated by the i18nmenu_node module.
+  if (!isset($info['superfish'])) {
+    $info['superfish'] = array();
+  }
+}
+
+/**
  * Builds the active trail from the page's menu data.
  */
 function superfish_build_page_trail($page_menu) {
