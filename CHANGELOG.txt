@@ -1,3 +1,20 @@
+Version 1.9-beta3, 2011-11-20
+----------------------
+- #1117348 [Fixed] Fixed the $output array.
+- #1158890, #1158926 [Fixed] hook_requirements.
+- #1111668, #1124998, #1144698, #1153712, #1107496, #1147596 [Fixed] Update script removed.
+- #925944, #979202, #1112928, #1123734 [Fixed] i18n function added back.
+- #1117568 [Fixed] Added prefix "sf-".
+- #1138278 [Fixed] Added a 0 to the "Path levels" options.
+- #1282708 [New feature] Take the "Expanded by default" option into effect.
+- #1184642, #1194244, #1191050, #1179838 [Improvement] Superfish now uses Drupal behvaiours.
+- #776480, #1140910, #1165838 [Improvement] Superfish now scans the /styles folder.
+- #1231378 [New feature] Drush integration.
+- #1246378, #1298846 [Fixed] cache_get issues.
+- #1244420 [Improvement] i18nmenu_node.
+- #1141848 [Improvement] Added the standard "menu" class.
+- #1104518, #1129672 [Fixed] Added an empty array.
+
 Version 1.8, 2011-03-27
 ----------------------
 - #1104154 [Fixed] Added a module_exists check.
