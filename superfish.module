@@ -490,63 +490,73 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
       $sfsettings['megamenu_exclude'] = variable_get('superfish_mcexclude_'. $delta, '');
       $sfsettings['megamenu_exclude'] = (strpos($sfsettings['megamenu_exclude'], ',')) ? array_remove_empty(explode(',', $sfsettings['megamenu_exclude'])) : $sfsettings['megamenu_exclude'];
 
-      $sfoptions['pathclass'] = ($sfsettings['type'] == 'navbar') ? "pathClass: '". variable_get('superfish_pathclass_'. $delta, 'active-trail') ."'" : '';
-      $sfoptions['pathlevels'] = (variable_get('superfish_pathlevels_'. $delta, 1) != 1) ? "pathLevels: '". variable_get('superfish_pathlevels_'. $delta, 1) ."'" : '';
-      $sfoptions['delay'] = (variable_get('superfish_delay_'. $delta, 800) != 800) ? "delay: ". variable_get('superfish_delay_'. $delta, 800) : '';
-      $slide = variable_get('superfish_slide_'. $delta, 'none');
+      $sfoptions['pathClass'] = ($sfsettings['type'] == 'navbar') ? variable_get('superfish_pathclass_' . $delta, 'active-trail') : '';
+      $sfoptions['pathLevels'] = (variable_get('superfish_pathlevels_' . $delta, 1) != 1) ? variable_get('superfish_pathlevels_' . $delta, 1) : '';
+      $sfoptions['delay'] = (variable_get('superfish_delay_' . $delta, 800) != 800) ? variable_get('superfish_delay_' . $delta, 800) : '';
+      $slide = variable_get('superfish_slide_' . $delta, 'vertical');
       if ($slide == 'none') {
-        $sfoptions['animation'] = "animation: {opacity:'show'}";
+        $sfoptions['animation'] = array('opacity' => 'show');
       }
       else {
-        $sfoptions['animation'] = "animation: {opacity:'show',";
-        $sfoptions['animation'] .= ($slide == 'vertical') ? "height:'show'" : '';
-        $sfoptions['animation'] .= ($slide == 'horizontal') ? "width:'show'" : '';
-        $sfoptions['animation'] .= ($slide == 'diagonal') ? "height:'show',width:'show'" : '';
-        $sfoptions['animation'] .= "}";
+        $sfoptions['animation'] = array('opacity' => 'show');
+        if ($slide == 'vertical' || $slide == 'diagonal') {
+          $sfoptions['animation']['height'] = 'show';
+        }
+        if ($slide == 'horizontal' || $slide == 'diagonal') {
+          $sfoptions['animation']['width'] = 'show';
+        }
       }
-      $speed = variable_get('superfish_speed_'. $delta, 'normal');
-      $sfoptions['speed'] = "speed: ". ((is_numeric($speed)) ? $speed : (($speed == ('slow' || 'normal' || 'fast')) ? "'". $speed ."'" : ''));
-      $sfoptions['arrow'] = (variable_get('superfish_arrow_'. $delta, 'false') == 1) ? "autoArrows: true" : "autoArrows: false";
-      $sfoptions['shadow'] = (variable_get('superfish_shadow_'. $delta, 'true') == 1) ? "dropShadows: true" : "dropShadows: false";
-      $sfoptions['hoverintent'] = (variable_get('superfish_hid_'. $delta, 1) == 0) ? "disableHI: true" : '';
-      $sfoptions = implode(",\n", array_remove_empty($sfoptions));
+      $speed = variable_get('superfish_speed_' . $delta, 'fast');
+      $sfoptions['speed'] = ((is_numeric($speed)) ? $speed : (($speed == ('slow' || 'normal' || 'fast')) ? $speed : ''));
+      $sfoptions['dropShadows'] = (variable_get('superfish_shadow_' . $delta, 1) == 1) ? TRUE : FALSE;
+      $sfoptions['autoArrows'] = (variable_get('superfish_arrow_' . $delta, 1) == 1) ? TRUE : FALSE;
+      $sfoptions['disableHI'] = (variable_get('superfish_hid_' . $delta, 1) == 0) ? TRUE : FALSE;
+      $sfoptions = array_remove_empty($sfoptions);
 
-      $sfplugins['touchscreen'] = (variable_get('superfish_touch_'. $delta, 0) == 1) ? '.sftouchscreen()' : '';
-      $tsua = variable_get('superfish_touchua_'. $delta, 0);
-      $tsual = variable_get('superfish_touchual_'. $delta, '');
-      if ($tsua == 1 && !empty($tsual)) {
-        $tsuac = array();
-        if (strpos($tsual, '*')) {
-          $tsual = explode('*', $tsual);
-          foreach ($tsual as $ua) {
-            $tsuac[] = (strpos(drupal_strtolower($_SERVER['HTTP_USER_AGENT']), drupal_strtolower($ua))) ? 1 : 0;
+      if (variable_get('superfish_touch_' . $delta, 0) == 1) {
+        $sfplugins['touchscreen'] = TRUE;
+        $tsua = variable_get('superfish_touchua_' . $delta, 0);
+        $tsual = variable_get('superfish_touchual_' . $delta, '');
+        if ($tsua == 1 && !empty($tsual)) {
+          $tsuac = array();
+          $hua = $_SERVER['HTTP_USER_AGENT'];
+          if (strpos($tsual, '*')) {
+            $tsual = explode('*', $tsual);
+            foreach ($tsual as $ua) {
+              $tsuac[] = (strpos(drupal_strtolower($hua), drupal_strtolower($ua))) ? 1 : 0;
+            }
+          }
+          else {
+            $tsuac[] = (strpos(drupal_strtolower($hua), drupal_strtolower($tsual))) ? 1 : 0;
+          }
+          if (!in_array(1, $tsuac)) {
+            unset($sfplugins['touchscreen']);
           }
         }
-        else {
-          $tsuac[] = (strpos(drupal_strtolower($_SERVER['HTTP_USER_AGENT']), drupal_strtolower($tsual))) ? 1 : 0;
-        }
-        $sfplugins['touchscreen'] = (in_array(1, $tsuac)) ? $sfplugins['touchscreen'] : '';
       }
-      $sfplugins['supposition'] = (variable_get('superfish_spp_'. $delta, 0) == 1) ? ".supposition()" : '';
-      $sfplugins['bgiframe'] = (variable_get('superfish_bgf_'. $delta, 0) == 1) ? ".find('ul').bgIframe({opacity:false})" : '';
-      $sfplugins = implode('', array_remove_empty($sfplugins));
+      $sfplugins['supposition'] = (variable_get('superfish_spp_' . $delta, 1) == 1) ? TRUE : FALSE;
+      $sfplugins['bgiframe'] = (variable_get('superfish_bgf_' . $delta, 0) == 1) ? TRUE : FALSE;
 
-      if (variable_get('superfish_supersubs_'. $delta, 1) == 1) {
-        $minwidth = variable_get('superfish_minwidth_'. $delta, '12');
-        $maxwidth = variable_get('superfish_maxwidth_'. $delta, '27');
-        $supersubs = ".supersubs({" . "minWidth: ". $minwidth .", maxWidth: ". $maxwidth .", extraWidth: 1})";
+      if (variable_get('superfish_supersubs_' . $delta, 1) == 1) {
+        $sfplugins['supersubs']['minWidth'] = variable_get('superfish_minwidth_' . $delta, '12');
+        $sfplugins['supersubs']['maxWidth'] = variable_get('superfish_maxwidth_' . $delta, '27');
+        $sfplugins['supersubs']['extraWidth'] = 1;
       }
-      else {
-        $supersubs = '';
-      }
-
-      // Finally our Javascript
-      $javascript = "jQuery(function(){\n" . "jQuery('#superfish-". $delta ."')". $supersubs .".superfish({\n". $sfoptions ."})". $sfplugins .";\n});";
+      $sfplugins = array_remove_empty($sfplugins);
 
       if ($output = theme('superfish', $delta, $menu_name, $mlid, $sfsettings)) {
         $block['content'] = $output['content'];
+        
+        // Prepare the JavaScript settings.
+        $javascript['superfish'][$delta]['id'] = $delta;
+        $javascript['superfish'][$delta]['sf'] = isset($sfoptions) ? $sfoptions : array();
+        if (!empty($sfplugins)) {
+          $javascript['superfish'][$delta]['plugins'] = $sfplugins;
+        }
+
         // Adding required Javascript
-        drupal_add_js($javascript, 'inline');
+        drupal_add_js($javascript, 'setting');
+
         // Adding required CSS files
         if ($sfsettings['style'] != 'none') {
           drupal_add_css(superfish_styles('path', $sfsettings['style']));
@@ -710,6 +720,8 @@ function superfish_init() {
     foreach ($sf_library as $s) {
       drupal_add_js($s);
     }
+    drupal_add_js(drupal_get_path('module', 'superfish') . '/superfish.js');
+
     drupal_add_css(libraries_get_path('superfish') .'/css/superfish.css');
     drupal_add_css(libraries_get_path('superfish') .'/css/superfish-vertical.css');
     drupal_add_css(libraries_get_path('superfish') .'/css/superfish-navbar.css');
