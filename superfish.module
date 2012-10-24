@@ -131,7 +131,7 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
         '#title' => t('Path levels'),
         '#description' => t('The number of levels of submenus that remain open or are restored using <strong>Path class</strong>. <em>(Default: 1)</em>'),
         '#default_value' => variable_get('superfish_pathlevels_'. $delta, 1),
-        '#options' => drupal_map_assoc(range(1, 10)),
+        '#options' => drupal_map_assoc(range(0, 10)),
       );
       $form['sf-settings']['superfish_slide_'. $delta] = array(
         '#type' => 'select',
