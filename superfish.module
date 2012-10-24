@@ -480,15 +480,15 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
       $sfsettings['wraphlt'] = variable_get('superfish_wraphlt_'. $delta, '');
       $sfsettings['linkdescription'] = variable_get('superfish_hldescription_'. $delta, 0);
       $sfsettings['hldmenus'] = variable_get('superfish_hldmenus_'. $delta, '');
-      $sfsettings['hldmenus'] = (strpos($sfsettings['hldmenus'], ',')) ? array_filter(explode(',', $sfsettings['hldmenus'])) : $sfsettings['hldmenus'];
+      $sfsettings['hldmenus'] = (strpos($sfsettings['hldmenus'], ',')) ? array_remove_empty(explode(',', $sfsettings['hldmenus'])) : $sfsettings['hldmenus'];
       $sfsettings['hldexclude'] = variable_get('superfish_hldexclude_'. $delta, '');
-      $sfsettings['hldexclude'] = (strpos($sfsettings['hldexclude'], ',')) ? array_filter(explode(',', $sfsettings['hldexclude'])) : $sfsettings['hldexclude'];
+      $sfsettings['hldexclude'] = (strpos($sfsettings['hldexclude'], ',')) ? array_remove_empty(explode(',', $sfsettings['hldexclude'])) : $sfsettings['hldexclude'];
       $sfsettings['megamenu'] = variable_get('superfish_multicolumn_'. $delta, 0);
       $sfsettings['megamenu_depth'] = variable_get('superfish_mcdepth_'. $delta, 1);
       $sfsettings['megamenu_depth'] = ($sfsettings['type'] == 'navbar' && $sfsettings['megamenu_depth'] == 1) ? 2 : $sfsettings['megamenu_depth'];
       $sfsettings['megamenu_levels'] = variable_get('superfish_mclevels_'. $delta, 1) + $sfsettings['megamenu_depth'];
       $sfsettings['megamenu_exclude'] = variable_get('superfish_mcexclude_'. $delta, '');
-      $sfsettings['megamenu_exclude'] = (strpos($sfsettings['megamenu_exclude'], ',')) ? array_filter(explode(',', $sfsettings['megamenu_exclude'])) : $sfsettings['megamenu_exclude'];
+      $sfsettings['megamenu_exclude'] = (strpos($sfsettings['megamenu_exclude'], ',')) ? array_remove_empty(explode(',', $sfsettings['megamenu_exclude'])) : $sfsettings['megamenu_exclude'];
 
       $sfoptions['pathclass'] = ($sfsettings['type'] == 'navbar') ? "pathClass: '". variable_get('superfish_pathclass_'. $delta, 'active-trail') ."'" : '';
       $sfoptions['pathlevels'] = (variable_get('superfish_pathlevels_'. $delta, 1) != 1) ? "pathLevels: '". variable_get('superfish_pathlevels_'. $delta, 1) ."'" : '';
@@ -509,7 +509,7 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
       $sfoptions['arrow'] = (variable_get('superfish_arrow_'. $delta, 'false') == 1) ? "autoArrows: true" : "autoArrows: false";
       $sfoptions['shadow'] = (variable_get('superfish_shadow_'. $delta, 'true') == 1) ? "dropShadows: true" : "dropShadows: false";
       $sfoptions['hoverintent'] = (variable_get('superfish_hid_'. $delta, 1) == 0) ? "disableHI: true" : '';
-      $sfoptions = implode(",\n", array_filter($sfoptions));
+      $sfoptions = implode(",\n", array_remove_empty($sfoptions));
 
       $sfplugins['touchscreen'] = (variable_get('superfish_touch_'. $delta, 0) == 1) ? '.sftouchscreen()' : '';
       $tsua = variable_get('superfish_touchua_'. $delta, 0);
@@ -529,7 +529,7 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
       }
       $sfplugins['supposition'] = (variable_get('superfish_spp_'. $delta, 0) == 1) ? ".supposition()" : '';
       $sfplugins['bgiframe'] = (variable_get('superfish_bgf_'. $delta, 0) == 1) ? ".find('ul').bgIframe({opacity:false})" : '';
-      $sfplugins = implode('', array_filter($sfplugins));
+      $sfplugins = implode('', array_remove_empty($sfplugins));
 
       if (variable_get('superfish_supersubs_'. $delta, 1) == 1) {
         $minwidth = variable_get('superfish_minwidth_'. $delta, '12');
@@ -639,7 +639,7 @@ function superfish_block_validate($form, &$form_state) {
     if (!empty($extracss)) {
       if (strpos($extracss, ',')) {
         $error = array();
-        $extracss = array_filter(explode(',', $extracss));
+        $extracss = array_remove_empty(explode(',', $extracss));
         foreach ($extracss as $c) {
           if (!file_exists($c)) {
             $error[] = $c;
@@ -676,6 +676,21 @@ function superfish_styles($display = 'list', $style = NULL) {
     }
   }
   return $output;
+}
+
+/**
+ * Helper function to clean up arrays.
+ */
+function array_remove_empty($haystack) {
+  foreach ($haystack as $key => $value) {
+    if (is_array($value)) {
+      $haystack[$key] = array_remove_empty($haystack[$key]);
+    }
+    elseif (empty($value) && is_bool($value) !== TRUE) {
+      unset($haystack[$key]);
+    }
+  }
+  return $haystack;
 }
 
 /**
@@ -956,14 +971,13 @@ function theme_superfish_build($id, $menu, $depth = -1, $trail = NULL, $sfsettin
         $single_children++;
       }
 
-      $item_class = implode(' ', array_filter($item_class));
+      $item_class = implode(' ', array_remove_empty($item_class));
 
       if (isset($menu_item['link']['localized_options']['attributes']['class'])) {
         $link_class_current = explode(' ', $menu_item['link']['localized_options']['attributes']['class']);
-        $link_class = array_merge($link_class_current, array_filter($link_class));
+        $link_class = array_merge($link_class_current, array_remove_empty($link_class));
       }
-     
-      $menu_item['link']['localized_options']['attributes']['class'] = implode(' ', array_filter($link_class));
+      $menu_item['link']['localized_options']['attributes']['class'] = implode(' ', array_remove_empty($link_class));
 
       // Render the menu item.
       $output['content'] .= '<li id="menu-'. $mlid .'-'. $id .'"';
