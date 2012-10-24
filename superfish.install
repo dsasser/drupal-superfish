@@ -21,7 +21,7 @@ function superfish_requirements($phase) {
   // Ensure translations do not break at install time
   $t = get_t();
 
-  if ($phase == 'install' && !module_exists('libraries')) {
+  if ($phase == 'install' && !drupal_get_path('module', 'libraries')) {
     $requirements['superfish']['severity'] = REQUIREMENT_ERROR;
     $requirements['superfish']['description'] = $t('Superfish module requires the <a href="@url">Libraries module</a> to be installed.', array('@url' => 'http://drupal.org/project/libraries'));
   }
