@@ -773,6 +773,8 @@ function superfish_build_page_trail($page_menu) {
       $trail = array_merge($trail, superfish_build_page_trail($item['below']));
     }
   }
+  // Allows other modules to alter the active trail.
+  drupal_alter('superfish_active_trail', $trail);
   return $trail;
 }
 
