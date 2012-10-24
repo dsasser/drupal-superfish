@@ -815,7 +815,7 @@ function theme_superfish($id, $menu_name, $mlid, $sfsettings = NULL) {
  * Helper function that builds the nested lists of a Superfish menu.
  */
 function theme_superfish_build($id, $menu, $depth = -1, $trail = NULL, $sfsettings = NULL) {
-  $output = array();
+  $output = array('content' => '');
   // Keep original $sfsettings untouched as we need to pass it to the child items.
   $settings = $sfsettings;
   $megamenu = $settings['megamenu'];
@@ -834,8 +834,9 @@ function theme_superfish_build($id, $menu, $depth = -1, $trail = NULL, $sfsettin
     $show_children = $megamenu_wrapper = $megamenu_column = $megamenu_content = FALSE;
     $item_class = $link_class = array();
     $mlid = $menu_item['link']['mlid'];
-
+    
     if (!isset($menu_item['link']['hidden']) || $menu_item['link']['hidden'] == 0) {
+
       $item_class[] = ($trail && in_array($mlid, $trail)) ? 'active-trail' : '';
 
       // Add helper classes to the menu items and hyperlinks.
