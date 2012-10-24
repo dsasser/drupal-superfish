@@ -37,8 +37,8 @@ function superfish_requirements($phase) {
       $requirements['superfish']['severity'] = REQUIREMENT_ERROR;
       $requirements['superfish']['description'] = $t('Please download the Superfish library from <a href="@url">@url</a>.', array('@url' => 'http://drupal.org/project/superfish'));
     }
-    return $requirements;
   }
+  return $requirements;
 }
 
 /**
