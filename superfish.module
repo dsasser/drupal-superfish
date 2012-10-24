@@ -91,19 +91,7 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
         '#type' => 'select',
         '#title' => t('Style'),
         '#default_value' => variable_get('superfish_style_'. $delta, 'default'),
-        '#options' => array(
-          'default' => t('Default'),
-          'none' => t('None'),
-          'blue' => t('Blue'),
-          'coffee' => t('Coffee'),
-          'light-blue' => t('Light blue'),
-          'pomegranate' => t('Pomegranate'),
-          'space' => t('Space [Blue]'),
-          'space-orange' => t('Space [Orange]'),
-          'space-teal' => t('Space [Teal]'),
-          'spring' => t('Spring'),
-          'white' => t('White')
-          ),
+        '#options' => superfish_styles(),
       );
       $form['sf-settings']['superfish_speed_'. $delta] = array(
         '#type' => 'textfield',
@@ -561,9 +549,7 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
         drupal_add_js($javascript, 'inline');
         // Adding required CSS files
         if ($sfsettings['style'] != 'none') {
-          if (module_exists('libraries')) {
-            drupal_add_css(libraries_get_path('superfish') .'/style/'. $sfsettings['style'] .'.css');
-          }
+          drupal_add_css(superfish_styles('path', $sfsettings['style']));
         }
         $extracss = variable_get('superfish_pathcss_'. $delta, '');
         if ($extracss) {
@@ -668,6 +654,28 @@ function superfish_block_validate($form, &$form_state) {
       }
     }
   }
+}
+
+/**
+ * Get a list of CSS files that can be used for styles.
+ */
+function superfish_styles($display = 'list', $style = NULL) {
+  $output = '';
+  if (module_exists('libraries')) {
+    $directory = libraries_get_path('superfish') . '/style';
+    $files = file_scan_directory($directory, '\.css$', array('.', '..'), 0, TRUE, 'name');
+    if ($display == 'list') {
+      $output = array('none' => t('None'));
+      foreach ($files as $file) {
+        $output[$file->name] = drupal_ucfirst($file->name);
+      }
+      natcasesort($output);
+    }
+    if ($display == 'path' && $style) {
+      $output = $files[$style]->filename;
+    }
+  }
+  return $output;
 }
 
 /**
