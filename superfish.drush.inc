@@ -2,13 +2,13 @@
 
 /**
  * @file
- *   drush integration for superfish.
+ * Drush integration for superfish.
  */
 
 /**
  * The Superfish plugin URI.
  */
-define('SUPERFISH_DOWNLOAD_URI', 'http://dl.dropbox.com/u/22795799/superfish-library-for-drupal-v1.zip');
+define('SUPERFISH_DOWNLOAD_URI', 'https://github.com/mehrpadin/Superfish-for-Drupal/zipball/master');
 
 /**
  * Implementation of hook_drush_command().
@@ -62,16 +62,6 @@ function superfish_drush_help($section) {
 }
 
 /**
- * Implements drush_MODULE_post_pm_enable().
- */
-// function drush_superfish_post_pm_enable() {
-//   $modules = func_get_args();
-//   if (in_array('superfish', $modules)) {
-//     drush_superfish_plugin();
-//   }
-// }
-
-/**
  * Command to download the Superfish plugin.
  */
 function drush_superfish_plugin() {
@@ -97,8 +87,8 @@ function drush_superfish_plugin() {
   $olddir = getcwd();
   chdir($path);
 
-  $filename = basename(SUPERFISH_DOWNLOAD_URI);
-  $dirname = basename(SUPERFISH_DOWNLOAD_URI, '.zip');
+  $filename = basename(SUPERFISH_DOWNLOAD_URI) .'.zip';
+  $dirname = 'superfish';
 
   // Remove any existing Superfish plugin directory
   if (is_dir($dirname)) {
@@ -110,13 +100,15 @@ function drush_superfish_plugin() {
   }
 
   // Download the zip archive
-  if (!drush_shell_exec('wget '. SUPERFISH_DOWNLOAD_URI)) {
+  if (!drush_shell_exec('wget '. SUPERFISH_DOWNLOAD_URI .' -O '. $filename)) {
     drush_shell_exec('curl -O '. SUPERFISH_DOWNLOAD_URI);
   }
 
   if (is_file($filename)) {
     // Decompress the zip archive
     drush_shell_exec('unzip -qq -o '. $filename);
+    // Rename directory
+    drush_shell_exec('mv mehrpadin-Superfish-for-Drupal-* ' . $dirname);
     // Remove the zip archive
     drush_op('unlink', $filename);
   }
