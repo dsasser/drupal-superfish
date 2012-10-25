@@ -559,6 +559,7 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
       $sfplugins = array_remove_empty($sfplugins);
 
       if ($output = theme('superfish', $delta, $menu_name, $mlid, $sfsettings)) {
+        $block['subject'] = $output['subject'];
         $block['content'] = filter_xss($output['content'], $allowed_tags = array('a', 'abbr', 'acronym', 'address', 'area', 'article', 'aside', 'audio', 'b', 'base', 'bdi', 'bdo', 'big', 'blockquote', 'br', 'button', 'canvas', 'caption', 'cite', 'code', 'col', 'colgroup', 'command', 'datalist', 'dd', 'del', 'details', 'dfn', 'div', 'dl', 'dt', 'em', 'embed', 'fieldset', 'figcaption', 'figure', 'footer', 'form', 'frame', 'frameset', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hgroup', 'hr', 'i', 'iframe', 'img', 'input', 'ins', 'kbd', 'keygen', 'label', 'legend', 'li', 'map', 'mark', 'meter', 'nav', 'noframes', 'noscript', 'object', 'ol', 'optgroup', 'option', 'output', 'p', 'param', 'pre', 'progress', 'q', 'rp', 'rt', 'ruby', 'samp', 'script', 'section', 'select', 'small', 'source', 'span', 'strong', 'sub', 'summary', 'sup', 'table', 'tbody', 'td', 'textarea', 'tfoot', 'th', 'thead', 'time', 'tr', 'track', 'tt', 'ul', 'var', 'video', 'wbr'));
         
         // Prepare the JavaScript settings.
@@ -833,7 +834,12 @@ function theme_superfish($id, $menu_name, $mlid, $sfsettings = NULL) {
   }
 
   $output['content'] = '';
-  $output['subject'] = $title;
+  if ($id == 2 && $user->uid) {
+    $output['subject'] = check_plain($user->name);
+  }
+  else {
+    $output['subject'] = $title;
+  }
   if ($menu) {
     // Set the total menu depth counting from this parent if we need it.
     $depth = $sfsettings['depth'];
