@@ -573,7 +573,7 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
         drupal_add_js($javascript, 'setting');
 
         // Adding required CSS files
-        if ($sfsettings['style'] != 'none') {
+        if ($sfsettings['style'] != 'none' && superfish_styles('path', $sfsettings['style']) != '') {
           drupal_add_css(superfish_styles('path', $sfsettings['style']));
         }
         $extracss = variable_get('superfish_pathcss_'. $delta, '');
@@ -611,6 +611,7 @@ function superfish_block_validate($form, &$form_state) {
   if ($form_state['values']['module'] == 'superfish') {
     $supersubs_error = FALSE;
     $delta = $form_state['values']['delta'];
+    $style = $form_state['values']['superfish_style_'. $delta];
     $speed = $form_state['values']['superfish_speed_'. $delta];
     $delay = $form_state['values']['superfish_delay_'. $delta];
     $pathclass = $form_state['values']['superfish_pathclass_'. $delta];
@@ -621,6 +622,9 @@ function superfish_block_validate($form, &$form_state) {
     $hldexclude = $form_state['values']['superfish_hldexclude_'. $delta];
     $extracss = $form_state['values']['superfish_pathcss_'. $delta];
 
+    if ($style != 'none' && superfish_styles('path', $style) == '') {
+      form_set_error('superfish_style_' . $delta, t('Cannot find the CSS file of the selected style.'));
+    }
     if ($speed == '') {
       form_set_error('superfish_speed_'. $delta, t('<strong>Animation speed</strong> field cannot be empty.'));
     }
@@ -697,7 +701,11 @@ function superfish_styles($display = 'list', $style = NULL) {
       natcasesort($output);
     }
     if ($display == 'path' && $style) {
-      $output = $files[$style]->filename;
+      if (isset($files[$style])) {
+        $output = $files[$style]->filename;
+      } else {
+        $output = '';
+      }
     }
   }
   return $output;
