@@ -20,23 +20,22 @@ function superfish_requirements($phase) {
   $requirements = array();
   // Ensure translations do not break at install time
   $t = get_t();
-
-  if ($phase == 'install' && !drupal_get_path('module', 'libraries')) {
-    $requirements['superfish']['severity'] = REQUIREMENT_ERROR;
-    $requirements['superfish']['description'] = $t('Superfish module requires the <a href="@url">Libraries module</a> to be installed.', array('@url' => 'http://drupal.org/project/libraries'));
-  }
-  if (module_exists('libraries')) {
-    $requirements['superfish']['title'] = $t('Superfish library');
+  $requirements['superfish']['title'] = $t('Superfish library');
+  if (module_exists('libraries') && function_exists('libraries_get_libraries')) {
     $library = libraries_get_libraries();
-    if (isset($library['superfish'])) {
-      $requirements['superfish']['value'] = $t('Installed');
-      $requirements['superfish']['severity'] = REQUIREMENT_OK;
-    }
-    else {
-      $requirements['superfish']['value'] = $t('Not installed');
-      $requirements['superfish']['severity'] = REQUIREMENT_ERROR;
-      $requirements['superfish']['description'] = $t('Please download the Superfish library from <a href="@url">@url</a>.', array('@url' => 'http://drupal.org/project/superfish'));
-    }
+    $superfish_installed = (isset($library['superfish'])) ? TRUE : FALSE;
+  }
+  elseif (file_exists('sites/all/libraries/superfish/superfish.js')) {
+    $superfish_installed = TRUE;
+  }
+  if ($superfish_installed) {
+    $requirements['superfish']['value'] = $t('Installed');
+    $requirements['superfish']['severity'] = REQUIREMENT_OK;
+  }
+  else {
+    $requirements['superfish']['value'] = $t('Not installed');
+    $requirements['superfish']['severity'] = REQUIREMENT_ERROR;
+    $requirements['superfish']['description'] = $t('Please download the Superfish library from !link.', array('!link' => l('http://drupal.org/project/superfish', 'http://drupal.org/project/superfish')));
   }
   return $requirements;
 }
