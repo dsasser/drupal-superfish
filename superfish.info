@@ -3,5 +3,4 @@ description = "jQuery Superfish plugin for your Drupal menus."
 package = User interface
 dependencies[] = menu
 dependencies[] = jquery_update
-dependencies[] = libraries
 core = 6.x
