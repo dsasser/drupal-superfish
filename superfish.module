@@ -521,7 +521,7 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
         }
       }
       $speed = variable_get('superfish_speed_' . $delta, 'fast');
-      $sfoptions['speed'] = ((is_numeric($speed)) ? $speed : (($speed == ('slow' || 'normal' || 'fast')) ? $speed : ''));
+      $sfoptions['speed'] = ((is_numeric($speed)) ? (int)$speed : (($speed == ('slow' || 'normal' || 'fast')) ? $speed : ''));
       $sfoptions['dropShadows'] = (variable_get('superfish_shadow_' . $delta, 1) == 1) ? TRUE : FALSE;
       $sfoptions['autoArrows'] = (variable_get('superfish_arrow_' . $delta, 1) == 1) ? TRUE : FALSE;
       $sfoptions['disableHI'] = (variable_get('superfish_hid_' . $delta, 1) == 0) ? TRUE : FALSE;
@@ -620,7 +620,7 @@ function superfish_block_validate($form, &$form_state) {
     $hldexclude = $form_state['values']['superfish_hldexclude_'. $delta];
     $extracss = $form_state['values']['superfish_pathcss_'. $delta];
 
-    if (empty($speed)) {
+    if ($speed == '') {
       form_set_error('superfish_speed_'. $delta, t('<strong>Animation speed</strong> field cannot be empty.'));
     }
     elseif (!is_numeric($speed) && !in_array($speed, array('slow', 'normal', 'fast'))) {
