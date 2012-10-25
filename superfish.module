@@ -272,19 +272,30 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
         '#collapsible' => TRUE,
         '#collapsed' => FALSE,
       );
-      $form['sf-advanced-html']['sf-hyperlinks']['superfish_hldescription_'. $delta] = array(
+      $form['sf-advanced-html']['sf-hyperlinks']['superfish_hhldescription_' . $delta] = array(
         '#type' => 'checkbox',
-        '#title' => t('Include hyperlinks description (title) in hyperlinks text.'),
+        '#title' => t('Hide hyperlink descriptions ("title" attribute)') .'<br /><small>'. t('(Enabling this feature makes below settings ineffective.)') .'</small>',
+        '#default_value' => variable_get('superfish_hhldescription_' . $delta, 0),
+      );
+      $form['sf-advanced-html']['sf-hyperlinks']['sf-hyperlinktexts'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Hyperlink texts'),
+        '#collapsible' => TRUE,
+        '#collapsed' => FALSE,
+      );
+      $form['sf-advanced-html']['sf-hyperlinks']['sf-hyperlinktexts']['superfish_hldescription_'. $delta] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Insert hyperlink descriptions ("title" attribute) into hyperlink texts.'),
         '#default_value' => variable_get('superfish_hldescription_'. $delta, 0),
       );
-      $form['sf-advanced-html']['sf-hyperlinks']['superfish_hldmenus_'. $delta] = array(
+      $form['sf-advanced-html']['sf-hyperlinks']['sf-hyperlinktexts']['superfish_hldmenus_'. $delta] = array(
         '#type' => 'textfield',
         '#title' => t('Limit to below menu items'),
         '#description' => t('Enter menu item ID\'s. Leave empty to include all menus. (Comma separated)') . ' <em>(' . t('Default') . ': ' . t('empty') . ')</em><br />' . t('Example') . ': 5,10,20',
         '#default_value' => variable_get('superfish_hldmenus_'. $delta, ''),
         '#size' => 50,
       );
-      $form['sf-advanced-html']['sf-hyperlinks']['superfish_hldexclude_'. $delta] = array(
+      $form['sf-advanced-html']['sf-hyperlinks']['sf-hyperlinktexts']['superfish_hldexclude_'. $delta] = array(
         '#type' => 'textfield',
         '#title' => t('Exclude below menu items'),
         '#description' => t('Enter the ID of the menu items you <strong>do not</strong> want to link descriptions for. (Comma separated)') . ' <em>(' . t('Default') . ': ' . t('empty') . ')</em><br />' . t('Example') . ': 5,10,20',
@@ -457,6 +468,7 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
       variable_set('superfish_itemcount_'. $delta, $edit['superfish_itemcount_'. $delta]);
       variable_set('superfish_itemcounter_'. $delta, $edit['superfish_itemcounter_'. $delta]);
       variable_set('superfish_itemdepth_'. $delta, $edit['superfish_itemdepth_'. $delta]);
+      variable_set('superfish_hhldescription_'. $delta, $edit['superfish_hhldescription_'. $delta]);
       variable_set('superfish_hldescription_'. $delta, $edit['superfish_hldescription_'. $delta]);
       variable_set('superfish_hldmenus_'. $delta, $edit['superfish_hldmenus_'. $delta]);
       variable_set('superfish_hldexclude_'. $delta, $edit['superfish_hldexclude_'. $delta]);
@@ -492,6 +504,7 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
       $sfsettings['wrapul'] = variable_get('superfish_wrapul_'. $delta, '');
       $sfsettings['wraphl'] = variable_get('superfish_wraphl_'. $delta, '');
       $sfsettings['wraphlt'] = variable_get('superfish_wraphlt_'. $delta, '');
+      $sfsettings['hidelinkdescription'] = variable_get('superfish_hhldescription_' . $delta, 0);
       $sfsettings['linkdescription'] = variable_get('superfish_hldescription_'. $delta, 0);
       $sfsettings['hldmenus'] = variable_get('superfish_hldmenus_'. $delta, '');
       $sfsettings['hldmenus'] = (strpos($sfsettings['hldmenus'], ',')) ? array_remove_empty(explode(',', $sfsettings['hldmenus'])) : $sfsettings['hldmenus'];
@@ -943,7 +956,12 @@ function theme_superfish_build($id, $menu, $depth = -1, $trail = NULL, $sfsettin
       $link_class[] = ($settings['hlclass']) ? $settings['hlclass'] : '';
       $i++;
 
-      // Add hyperlinks description (title) to their text.
+      // Hide hyperlink descriptions ("title" attribute).
+      if ($settings['hidelinkdescription'] == 1) {
+        unset($menu_item['link']['localized_options']['attributes']['title']);
+      }
+
+      // Insert hyperlink description ("title" attribute) into the text.
       $show_linkdescription = ($settings['linkdescription'] == 1 && !empty($menu_item['link']['localized_options']['attributes']['title'])) ? TRUE : FALSE;
       if ($show_linkdescription) {
         if (!empty($settings['hldmenus'])) {
