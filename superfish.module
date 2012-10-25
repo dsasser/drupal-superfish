@@ -201,6 +201,7 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
         '#description' => t('Could be partial or complete. (Asterisk separated)') . '<em>(' . t('Default') . ': ' . t('empty') . ')</em><br />' . t('Examples') . ': <ul><li>iPhone*Android*iPad</li><li>Mozilla/5.0 (webOS/1.4.0; U; en-US) AppleWebKit/532.2 (KHTML, like Gecko) Version/1.0 Safari/532.2 Pre/1.0 * Mozilla/5.0 (iPad; U; CPU OS 3_2_1 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Mobile/7B405</li></ul>',
         '#default_value' => variable_get('superfish_touchual_'. $delta, ''),
         '#size' => 100,
+        '#maxlength' => 2000,
       );
       $form['sf-plugins']['sf-supersubs'] = array(
         '#type' => 'fieldset',
