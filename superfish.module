@@ -527,7 +527,7 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
       $sfoptions['disableHI'] = (variable_get('superfish_hid_' . $delta, 1) == 0) ? TRUE : FALSE;
       $sfoptions = array_remove_empty($sfoptions);
 
-      if (variable_get('superfish_touch_' . $delta, 0) == 1) {
+      if (variable_get('superfish_touch_' . $delta, 0) == 1 && isset($_SERVER['HTTP_USER_AGENT'])) {
         $sfplugins['touchscreen'] = TRUE;
         $tsua = variable_get('superfish_touchua_' . $delta, 0);
         $tsual = variable_get('superfish_touchual_' . $delta, '');
