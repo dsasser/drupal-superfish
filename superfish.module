@@ -910,7 +910,7 @@ function theme_superfish_build($id, $menu, $depth = -1, $trail = NULL, $sfsettin
 
       // Add helper classes to the menu items and hyperlinks.
       $settings['firstlast'] = ($settings['dfirstlast'] == 1 && $total_children == 1) ? 0 : $settings['firstlast'];
-      $item_class[] = ($settings['firstlast'] == 1) ? (($i == 1) ? 'first' : (($i == $total_children) ? 'last' : 'middle')) : '';
+      $item_class[] = ($settings['firstlast'] == 1) ? (($i == 1 && $i == $total_children) ? 'firstandlast' : (($i == 1) ? 'first' : (($i == $total_children) ? 'last' : 'middle'))) : '';
       $settings['zebra'] = ($settings['dzebra'] == 1 && $total_children == 1) ? 0 : $settings['zebra'];
       $item_class[] = ($settings['zebra'] == 1) ? (($i % 2) ? 'odd' : 'even') : '';
       $item_class[] = ($settings['itemcount'] == 1) ? 'sf-item-'. $i : '';
