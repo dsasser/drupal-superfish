@@ -18,24 +18,26 @@ function superfish_uninstall() {
  */
 function superfish_requirements($phase) {
   $requirements = array();
-  // Ensure translations do not break at install time
-  $t = get_t();
-  $requirements['superfish']['title'] = $t('Superfish library');
-  if (module_exists('libraries') && function_exists('libraries_get_libraries')) {
-    $library = libraries_get_libraries();
-    $superfish_installed = (isset($library['superfish'])) ? TRUE : FALSE;
-  }
-  elseif (file_exists('sites/all/libraries/superfish/superfish.js')) {
-    $superfish_installed = TRUE;
-  }
-  if ($superfish_installed) {
-    $requirements['superfish']['value'] = $t('Installed');
-    $requirements['superfish']['severity'] = REQUIREMENT_OK;
-  }
-  else {
-    $requirements['superfish']['value'] = $t('Not installed');
-    $requirements['superfish']['severity'] = REQUIREMENT_ERROR;
-    $requirements['superfish']['description'] = $t('Please download the Superfish library from !link.', array('!link' => l('http://drupal.org/project/superfish', 'http://drupal.org/project/superfish')));
+  if ($phase == 'runtime') {
+    // Ensure translations do not break at install time
+    $t = get_t();
+    $requirements['superfish']['title'] = $t('Superfish library');
+    if (module_exists('libraries') && function_exists('libraries_get_libraries')) {
+      $library = libraries_get_libraries();
+      $superfish_installed = (isset($library['superfish'])) ? TRUE : FALSE;
+    }
+    elseif (file_exists('sites/all/libraries/superfish/superfish.js')) {
+      $superfish_installed = TRUE;
+    }
+    if ($superfish_installed) {
+      $requirements['superfish']['value'] = $t('Installed');
+      $requirements['superfish']['severity'] = REQUIREMENT_OK;
+    }
+    else {
+      $requirements['superfish']['value'] = $t('Not installed');
+      $requirements['superfish']['severity'] = REQUIREMENT_ERROR;
+      $requirements['superfish']['description'] = $t('Please download the Superfish library from !link.', array('!link' => l('http://drupal.org/project/superfish', 'http://drupal.org/project/superfish')));
+    }
   }
   return $requirements;
 }
