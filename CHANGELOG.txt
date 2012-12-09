@@ -1,3 +1,24 @@
+Version 1.9-beta5, 2012-10-25
+----------------------
+- #804616 Fixed speed value and validation bugs. (Comments 8th and 10th)
+- #1107432 Added 'firstandlast' class for single menu items.
+- #1138278 Fixed the array_remove_empty function bug. (Comment 5th)
+- #1246378 Removed menu caching entirely.
+- #1276040 Updated the superfish.drush.inc to use Github.
+- #1347710 Fixed a bug in the Drupal Behaviors file. (Comment 13th)
+- #1356064 Fixed block title bug.
+- #1367086 Fixed the superfish_styles function bug (and related tweaks).
+- #1455724 Tweaked the if statement.
+- #1158926 Libraries API is no longer mandatory.
+- #1539894 Added a new feature to make it possible to hide link descriptions.
+- #1700566 Block form tweaked.
+- Added parts of the hook_requirements which were left behind from earlier commit.
+- #1570796 Added README.txt file
+
+Version 1.9-beta4, 2011-11-24
+----------------------
+- Added the filter_xss function.
+
 Version 1.9-beta3, 2011-11-20
 ----------------------
 - #1117348 [Fixed] Fixed the $output array.
