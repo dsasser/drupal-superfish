@@ -977,6 +977,10 @@ function superfish_block_validate($form, &$form_state) {
     $speed = $form_state['values']['superfish_speed_'. $delta];
     $delay = $form_state['values']['superfish_delay_'. $delta];
     $pathclass = $form_state['values']['superfish_pathclass_'. $delta];
+    $touch = $form_state['values']['superfish_touch_'. $delta];
+    $touchbp = $form_state['values']['superfish_touchbp_'. $delta];
+    $touchua = $form_state['values']['superfish_touchua_'. $delta];
+    $touchual = $form_state['values']['superfish_touchual_'. $delta];
     $small = $form_state['values']['superfish_small_'. $delta];
     $smallbp = $form_state['values']['superfish_smallbp_'. $delta];
     $smallua = $form_state['values']['superfish_smallua_'. $delta];
@@ -1002,6 +1006,16 @@ function superfish_block_validate($form, &$form_state) {
     }
     if (is_numeric($pathclass)) {
       form_set_error('superfish_pathclass_'. $delta, t('<strong>Path class</strong>: unacceptable value entered.'));
+    }
+    if ($touch == 2 && $touchbp == '') {
+      form_set_error('superfish_touchbp_'. $delta, t('<strong>sf-Touchscreen: Breakpoint</strong>: field cannot be empty.'));
+    }
+    if (!is_numeric($touchbp)) {
+      form_set_error('superfish_touchbp_'. $delta, t('<strong>sf-Touchscreen: Breakpoint</strong>: unacceptable value entered.'));
+    }
+    if ($touch == 3 && $touchua == 1 && $touchual == '') {
+      form_set_error('superfish_touchual_'. $delta, t('<strong>sf-Touchscreen: Custom list of user agents</strong>: field cannot be empty.'));
+    }
     if ($small == 2 && $smallbp == '') {
       form_set_error('superfish_smallbp_'. $delta, t('<strong>sf-Smallscreen: Breakpoint</strong>: field cannot be empty.'));
     }
