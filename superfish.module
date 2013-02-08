@@ -181,27 +181,66 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
       $form['sf-plugins']['sf-touchscreen'] = array(
         '#type' => 'fieldset',
         '#title' => t('sf-Touchscreen') . ' <sup>(' . t('Beta') . ')</sup>',
-        '#description' => t('<strong>sf-Touchscreen</strong> provides touchscreen compatibility for your menus.'),
+        '#description' => t('<strong>sf-Touchscreen</strong> provides touchscreen compatibility for your menus.') . ' <sup>(' . t('The first click on a parent hyperlink shows its children and the second click opens the hyperlink.') . ')</sup>',
         '#collapsible' => TRUE,
         '#collapsed' => FALSE,
       );
       $form['sf-plugins']['sf-touchscreen']['superfish_touch_'. $delta] = array(
-        '#type' => 'checkbox',
-        '#title' => t('Use jQuery sf-Touchscreen plugin for this menu.'),
+        '#type' => 'radios',
         '#default_value' => variable_get('superfish_touch_'. $delta, 0),
+        '#options' => array(
+          0 => t('Disable') . '. <sup>(' . t('Default') . ')</sup>',
+          1 => t('Enable jQuery sf-Touchscreen plugin for this menu.'),
+          2 => t('Enable jQuery sf-Touchscreen plugin for this menu depending on the user\'s Web browser <strong>window width</strong>.'),
+          3 => t('Enable jQuery sf-Touchscreen plugin for this menu depending on the user\'s Web browser <strong>user agent</strong>.'),
+        ),
       );
-      $form['sf-plugins']['sf-touchscreen']['superfish_touchua_'. $delta] = array(
-        '#type' => 'checkbox',
-        '#title' => t('Use this mode only if below <strong>user agents</strong> were detected.'),
-        '#default_value' => variable_get('superfish_touchua_'. $delta, 0),
+      $form['sf-plugins']['sf-touchscreen']['sf-touchscreen-windowwidth'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Window width settings'),
+        '#description' => t('sf-Touchscreen will be enabled only if the width of user\'s Web browser window is smaller than the below value.') . '<br /><br />'. t('Please note that in most cases such a meta tag is necessary for this feature to work properly:') .'<br /><code>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;</code>',
+        '#collapsible' => TRUE,
+        '#collapsed' => TRUE,
       );
-      $form['sf-plugins']['sf-touchscreen']['superfish_touchual_'. $delta] = array(
+      $form['sf-plugins']['sf-touchscreen']['sf-touchscreen-windowwidth']['superfish_touchbp_'. $delta] = array(
         '#type' => 'textfield',
-        '#title' => t('User agents'),
-        '#description' => t('Could be partial or complete. (Asterisk separated)') . '<em>(' . t('Default') . ': ' . t('empty') . ')</em><br />' . t('Examples') . ': <ul><li>iPhone*Android*iPad</li><li>Mozilla/5.0 (webOS/1.4.0; U; en-US) AppleWebKit/532.2 (KHTML, like Gecko) Version/1.0 Safari/532.2 Pre/1.0 * Mozilla/5.0 (iPad; U; CPU OS 3_2_1 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Mobile/7B405</li></ul>',
+        '#description' => t('Also known as "Breakpoint".') . ' <em>(' .  t('Default') . ': 768)</em>',
+        '#default_value' => variable_get('superfish_touchbp_'. $delta, 768),
+        '#field_suffix' => t('pixles'),
+        '#size' => 10,
+      );
+      $form['sf-plugins']['sf-touchscreen']['sf-touchscreen-useragent'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('User agent settings'),
+        '#collapsible' => TRUE,
+        '#collapsed' => TRUE,
+      );
+      $form['sf-plugins']['sf-touchscreen']['sf-touchscreen-useragent']['superfish_touchua_'. $delta] = array(
+        '#type' => 'radios',
+        '#default_value' => variable_get('superfish_touchua_'. $delta, 0),
+        '#options' => array(
+          0 => t('Use the pre-defined list of the <strong>user agents</strong>.') . ' <sup>(' . t('Default') . ') (' . t('Recommended') . ')</sup>',
+          1 => t('Use the custom list of the <strong>user agents</strong>.'),
+        ),
+      );
+      $form['sf-plugins']['sf-touchscreen']['sf-touchscreen-useragent']['superfish_touchual_'. $delta] = array(
+        '#type' => 'textfield',
+        '#title' => t('Custom list of the user agents'),
+        '#description' => t('Could be partial or complete. (Asterisk separated)') . ' <em>(' . t('Default') . ': ' . t('empty') . ')</em><br />' . t('Examples') . ':<ul><li>iPhone*Android*iPad <sup>(' . t('Recommended') . ')</sup></li><li>Mozilla/5.0 (webOS/1.4.0; U; en-US) AppleWebKit/532.2 (KHTML, like Gecko) Version/1.0 Safari/532.2 Pre/1.0 * Mozilla/5.0 (iPad; U; CPU OS 3_2_1 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Mobile/7B405</li></ul>' . ((isset($_SERVER['HTTP_USER_AGENT'])) ? '<br />' . t('<strong>UA string of the current Web browser:</strong> ') . $_SERVER['HTTP_USER_AGENT'] : ''),
         '#default_value' => variable_get('superfish_touchual_'. $delta, ''),
         '#size' => 100,
         '#maxlength' => 2000,
+      );
+      $form['sf-plugins']['sf-touchscreen']['sf-touchscreen-useragent']['superfish_touchuam_'. $delta] = array(
+        '#type' => 'select',
+        '#title' => t('<strong>User agent</strong> detection method'),
+        '#description' => '<em>(' . t('Default') . ': ' . t('Client-side (JavaScript)') . ')</em>',
+        '#default_value' => variable_get('superfish_touchuam_'. $delta, 0),
+        '#options' => array(
+          0 => t('Client-side (JavaScript)'),
+          1 => t('Server-side (PHP)')
+        ),
+      );
       );
       $form['sf-plugins']['sf-supersubs'] = array(
         '#type' => 'fieldset',
@@ -453,8 +492,10 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
       variable_set('superfish_spp_'. $delta, $edit['superfish_spp_'. $delta]);
       variable_set('superfish_hid_'. $delta, $edit['superfish_hid_'. $delta]);
       variable_set('superfish_touch_'. $delta, $edit['superfish_touch_'. $delta]);
+      variable_set('superfish_touchbp_'. $delta, $edit['superfish_touchbp_'. $delta]);
       variable_set('superfish_touchua_'. $delta, $edit['superfish_touchua_'. $delta]);
       variable_set('superfish_touchual_'. $delta, $edit['superfish_touchual_'. $delta]);
+      variable_set('superfish_touchuam_'. $delta, $edit['superfish_touchuam_'. $delta]);
       variable_set('superfish_supersubs_'. $delta, $edit['superfish_supersubs_'. $delta]);
       variable_set('superfish_minwidth_'. $delta, $edit['superfish_minwidth_'. $delta]);
       variable_set('superfish_maxwidth_'. $delta, $edit['superfish_maxwidth_'. $delta]);
@@ -541,25 +582,75 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
       $sfoptions['disableHI'] = (variable_get('superfish_hid_' . $delta, 1) == 0) ? TRUE : FALSE;
       $sfoptions = array_remove_empty($sfoptions);
 
-      if (variable_get('superfish_touch_' . $delta, 0) == 1 && isset($_SERVER['HTTP_USER_AGENT'])) {
-        $sfplugins['touchscreen'] = TRUE;
-        $tsua = variable_get('superfish_touchua_' . $delta, 0);
-        $tsual = variable_get('superfish_touchual_' . $delta, '');
-        if ($tsua == 1 && !empty($tsual)) {
-          $tsuac = array();
-          $hua = $_SERVER['HTTP_USER_AGENT'];
-          if (strpos($tsual, '*')) {
-            $tsual = explode('*', $tsual);
-            foreach ($tsual as $ua) {
-              $tsuac[] = (strpos(drupal_strtolower($hua), drupal_strtolower($ua))) ? 1 : 0;
-            }
+      $touchscreen = variable_get('superfish_touch_'. $delta, 0);
+      switch ($touchscreen) {
+        case 1 :
+          $sfplugins['touchscreen']['mode'] = 'always_active';
+        break;
+        case 2 :
+          $sfplugins['touchscreen']['mode'] = 'window_width';
+          $tsbp = variable_get('superfish_touchbp_'. $delta, 768);
+          $sfplugins['touchscreen']['breakpoint'] = ($tsbp != 768) ? (int)$tsbp : '';
+        break;
+        case 3 :
+          // Which method to use for UA detection.
+          $tsuam = variable_get('superfish_touchuam_'. $delta, 0);
+          switch ($tsuam) {
+            // Client-side.
+            case 0 :
+              $tsua = variable_get('superfish_touchua_'. $delta, 0);
+              switch ($tsua) {
+                case 0 :
+                  $sfplugins['touchscreen']['mode'] = 'useragent_predefined';
+                break;
+                case 1 :
+                  $sfplugins['touchscreen']['mode'] = 'useragent_custom';
+                  $tsual = drupal_strtolower(variable_get('superfish_touchual_'. $delta, ''));
+                  if (strpos($tsual, '*')) {
+                    $tsual = str_replace('*', '|', $tsual);
+                  }
+                  $tsual = '/(' . $tsual . ')/i';
+                  $sfplugins['touchscreen']['useragent'] = $tsual;
+                break;
+              }
+
+            break;
+            // Server-side.
+            case 1 :
+              if (isset($_SERVER['HTTP_USER_AGENT'])) {
+                $hua = drupal_strtolower($_SERVER['HTTP_USER_AGENT']);
+                $tsua = variable_get('superfish_touchua_'. $delta, 0);
+                switch ($tsua) {
+                  // Use the pre-defined list of mobile UA strings.
+                  case 0 :
+                    if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i', $hua)) {
+                      $sfplugins['touchscreen']['mode'] = 'always_active';
+                    }
+                  break;
+                  // Use the custom list of UA strings.
+                  case 1 :
+                    $tsual = variable_get('superfish_touchual_'. $delta, '');
+                    $tsual = drupal_strtolower($tsual);
+                    $tsuac = array();
+                    if (strpos($tsual, '*')) {
+                      $tsual = explode('*', $tsual);
+                      foreach ($tsual as $ua) {
+                        $tsuac[] = (strpos($hua, $ua)) ? 1 : 0;
+                      }
+                    }
+                    else {
+                      $tsuac[] = (strpos($hua, $tsual)) ? 1 : 0;
+                    }
+                    if (in_array(1, $tsuac)) {
+                      $sfplugins['touchscreen']['mode'] = 'active';
+                    }
+                  break;
+                }
+              }
+            break;
           }
-          else {
-            $tsuac[] = (strpos(drupal_strtolower($hua), drupal_strtolower($tsual))) ? 1 : 0;
-          }
-          if (!in_array(1, $tsuac)) {
-            unset($sfplugins['touchscreen']);
-          }
+        break;
+      }
         }
       }
       $sfplugins['supposition'] = (variable_get('superfish_spp_' . $delta, 1) == 1) ? TRUE : FALSE;
