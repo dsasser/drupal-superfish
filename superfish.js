@@ -25,6 +25,9 @@
         if (options.plugins.touchscreen || false) {
           list.sftouchscreen();
         }
+        if (options.plugins.smallscreen || false) {
+          list.sfsmallscreen(options.plugins.smallscreen);
+        }
         if (options.plugins.supposition || false) {
           list.supposition();
         }

@@ -241,6 +241,148 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
           1 => t('Server-side (PHP)')
         ),
       );
+      $form['sf-plugins']['sf-smallscreen'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('sf-Smallscreen') . ' <sup>(' . t('Beta') . ')</sup>',
+        '#description' => t('<strong>sf-Smallscreen</strong> provides small-screen compatibility for your menus.') . ' <sup>(' . t('Converts the dropdown into a &lt;select&gt; element.') . ')</sup>',
+        '#collapsible' => TRUE,
+        '#collapsed' => FALSE,
+      );
+      $form['sf-plugins']['sf-smallscreen']['superfish_small_'. $delta] = array(
+        '#type' => 'radios',
+        '#default_value' => variable_get('superfish_small_'. $delta, 2),
+        '#options' => array(
+          0 => t('Disable') . '.',
+          1 => t('Enable jQuery sf-Smallscreen plugin for this menu.'),
+          2 => t('Enable jQuery sf-Smallscreen plugin for this menu depending on the user\'s Web browser <strong>window width</strong>.') . ' <sup>(' . t('Default') . ')</sup>',
+          3 => t('Enable jQuery sf-Smallscreen plugin for this menu depending on the user\'s Web browser <strong>user agent</strong>.'),
+        ),
+      );
+      $form['sf-plugins']['sf-smallscreen']['sf-smallscreen-windowwidth'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Window width settings'),
+        '#description' => t('sf-Smallscreen will be enabled only if the width of user\'s Web browser window is smaller than the below value.') . '<br /><br />' . t('Please note that in most cases such a meta tag is necessary for this feature to work properly:') . '<br /><code>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;</code>',
+        '#collapsible' => TRUE,
+        '#collapsed' => TRUE,
+      );
+      $form['sf-plugins']['sf-smallscreen']['sf-smallscreen-windowwidth']['superfish_smallbp_'. $delta] = array(
+        '#type' => 'textfield',
+        '#description' => t('Also known as "Breakpoint".') . ' <em>(' . t('Default') . ': 768)</em>',
+        '#default_value' => variable_get('superfish_smallbp_'. $delta, 768),
+        '#field_suffix' => t('pixles'),
+        '#size' => 10,
+      );
+      $form['sf-plugins']['sf-smallscreen']['sf-smallscreen-useragent'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('User agent settings'),
+        '#collapsible' => TRUE,
+        '#collapsed' => TRUE,
+      );
+      $form['sf-plugins']['sf-smallscreen']['sf-smallscreen-useragent']['superfish_smallua_'. $delta] = array(
+        '#type' => 'radios',
+        '#default_value' => variable_get('superfish_smallua_'. $delta, 0),
+        '#options' => array(
+          0 => t('Use the pre-defined list of the <strong>user agents</strong>.') . ' <sup>(' . t('Default') . ') (' . t('Recommended') . ')</sup>',
+          1 => t('Use the custom list of the <strong>user agents</strong>.'),
+        ),
+      );
+      $form['sf-plugins']['sf-smallscreen']['sf-smallscreen-useragent']['superfish_smallual_'. $delta] = array(
+        '#type' => 'textfield',
+        '#title' => t('Custom list of the user agents'),
+        '#description' => t('Could be partial or complete. (Asterisk separated)') . ' <em>(' . t('Default') . ': ' . t('empty') . ')</em><br />' . t('Examples') . ':<ul><li>iPhone*Android*iPad <sup>(' . t('Recommended') . ')</sup></li><li>Mozilla/5.0 (webOS/1.4.0; U; en-US) AppleWebKit/532.2 (KHTML, like Gecko) Version/1.0 Safari/532.2 Pre/1.0 * Mozilla/5.0 (iPad; U; CPU OS 3_2_1 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Mobile/7B405</li></ul>' . ((isset($_SERVER['HTTP_USER_AGENT'])) ? '<br />' . t('<strong>UA string of the current Web browser:</strong>') . ' ' . $_SERVER['HTTP_USER_AGENT'] : ''),
+        '#default_value' => variable_get('superfish_smallual_'. $delta, ''),
+        '#size' => 100,
+        '#maxlength' => 2000,
+      );
+      $form['sf-plugins']['sf-smallscreen']['sf-smallscreen-useragent']['superfish_smalluam_'. $delta] = array(
+        '#type' => 'select',
+        '#title' => t('<strong>User agent</strong> detection method:'),
+        '#description' => '<em>(' . t('Default') . ': ' . t('Client-side (JavaScript)') . ')</em>',
+        '#default_value' => variable_get('superfish_smalluam_'. $delta, 0),
+        '#options' => array(
+          0 => t('Client-side (JavaScript)'),
+          1 => t('Server-side (PHP)')
+        ),
+      );
+      $form['sf-plugins']['sf-smallscreen']['sf-smallscreen-select'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('&lt;select&gt; settings'),
+        '#collapsible' => TRUE,
+        '#collapsed' => TRUE,
+      );
+      $form['sf-plugins']['sf-smallscreen']['sf-smallscreen-select']['superfish_smallset_'. $delta] = array(
+        '#type' => 'textfield',
+        '#title' => t('&lt;select&gt; title'),
+        '#description' => t('By default the first item in the &lt;select&gt; element will be the name of the parent menu or the title of this block, you can change this by setting a custom title.') . ' <em>(' . t('Default') . ': ' . t('empty') . ')</em><br />' . t('Example') . ': <em> - ' . t('Main Menu') . ' - </em>.',
+        '#default_value' => variable_get('superfish_smallset_'. $delta, ''),
+        '#size' => 50,
+        '#maxlength' => 500,
+      );
+      $form['sf-plugins']['sf-smallscreen']['sf-smallscreen-select']['superfish_smallasa_'. $delta] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Add <em>selected</em> attribute to the &lt;option&gt; element with the class <strong>active</strong>'),
+        '#description' => t('Makes pre-selected the item linked to the active page when the page loads.'),
+        '#default_value' => variable_get('superfish_smallasa_'. $delta, 0),
+      );
+      $form['sf-plugins']['sf-smallscreen']['sf-smallscreen-select']['sf-smallscreen-select-more'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('More'),
+        '#collapsible' => TRUE,
+        '#collapsed' => FALSE,
+      );
+      $form['sf-plugins']['sf-smallscreen']['sf-smallscreen-select']['sf-smallscreen-select-more']['superfish_smallcmc_'. $delta] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Copy the main &lt;ul&gt; classes to the &lt;select&gt;.'),
+        '#description' => ' <em>(' . t('Default') . ': ' . t('disabled') . ')</em>',
+        '#default_value' => variable_get('superfish_smallcmc_'. $delta, 0),
+      );
+      $form['sf-plugins']['sf-smallscreen']['sf-smallscreen-select']['sf-smallscreen-select-more']['superfish_smallecm_'. $delta] = array(
+        '#type' => 'textfield',
+        '#title' => t('Exclude these classes from the &lt;select&gt; element'),
+        '#description' => t('Comma separated') . ' <em>(' . t('Default') . ': ' . t('empty') . ')</em>',
+        '#default_value' => variable_get('superfish_smallecm_'. $delta, ''),
+        '#size' => 100,
+        '#maxlength' => 1000,
+        '#states' => array(
+          'enabled' => array(
+           ':input[name="superfish_smallcmc_'. $delta . '"]' => array('checked' => TRUE),
+          ),
+        ),
+      );
+      $form['sf-plugins']['sf-smallscreen']['sf-smallscreen-select']['sf-smallscreen-select-more']['superfish_smallchc_'. $delta] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Copy the hyperlink classes to the &lt;option&gt; elements of the &lt;select&gt;.'),
+        '#description' => ' <em>(' . t('Default') . ': ' . t('disabled') . ')</em>',
+        '#default_value' => variable_get('superfish_smallchc_'. $delta, 0),
+      );
+      $form['sf-plugins']['sf-smallscreen']['sf-smallscreen-select']['sf-smallscreen-select-more']['superfish_smallech_'. $delta] = array(
+        '#type' => 'textfield',
+        '#title' => t('Exclude these classes from the &lt;option&gt; elements of the &lt;select&gt;'),
+        '#description' => t('Comma separated') . ' <em>(' . t('Default') . ': ' . t('empty') . ')</em>',
+        '#default_value' => variable_get('superfish_smallech_'. $delta, ''),
+        '#size' => 100,
+        '#maxlength' => 1000,
+        '#states' => array(
+          'enabled' => array(
+           ':input[name="superfish_smallchc_'. $delta . '"]' => array('checked' => TRUE),
+          ),
+        ),
+      );
+      $form['sf-plugins']['sf-smallscreen']['sf-smallscreen-select']['sf-smallscreen-select-more']['superfish_smallicm_'. $delta] = array(
+        '#type' => 'textfield',
+        '#title' => t('Include these classes in the &lt;select&gt; element'),
+        '#description' => t('Comma separated') . ' <em>(' . t('Default') . ': ' . t('empty') . ')</em>',
+        '#default_value' => variable_get('superfish_smallicm_'. $delta, ''),
+        '#size' => 100,
+        '#maxlength' => 1000,
+      );
+      $form['sf-plugins']['sf-smallscreen']['sf-smallscreen-select']['sf-smallscreen-select-more']['superfish_smallich_'. $delta] = array(
+        '#type' => 'textfield',
+        '#title' => t('Include these classes in the &lt;option&gt; elements of the &lt;select&gt;'),
+        '#description' => t('Comma separated') . ' <em>(' . t('Default') . ': ' . t('empty') . ')</em>',
+        '#default_value' => variable_get('superfish_smallich_'. $delta, ''),
+        '#size' => 100,
+        '#maxlength' => 1000,
       );
       $form['sf-plugins']['sf-supersubs'] = array(
         '#type' => 'fieldset',
@@ -496,6 +638,19 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
       variable_set('superfish_touchua_'. $delta, $edit['superfish_touchua_'. $delta]);
       variable_set('superfish_touchual_'. $delta, $edit['superfish_touchual_'. $delta]);
       variable_set('superfish_touchuam_'. $delta, $edit['superfish_touchuam_'. $delta]);
+      variable_set('superfish_small_'. $delta, $edit['superfish_small_'. $delta]);
+      variable_set('superfish_smallbp_'. $delta, $edit['superfish_smallbp_'. $delta]);
+      variable_set('superfish_smallua_'. $delta, $edit['superfish_smallua_'. $delta]);
+      variable_set('superfish_smallual_'. $delta, $edit['superfish_smallual_'. $delta]);
+      variable_set('superfish_smalluam_'. $delta, $edit['superfish_smalluam_'. $delta]);
+      variable_set('superfish_smallset_'. $delta, $edit['superfish_smallset_'. $delta]);
+      variable_set('superfish_smallasa_'. $delta, $edit['superfish_smallasa_'. $delta]);
+      variable_set('superfish_smallcmc_'. $delta, $edit['superfish_smallcmc_'. $delta]);
+      variable_set('superfish_smallecm_'. $delta, $edit['superfish_smallecm_'. $delta]);
+      variable_set('superfish_smallchc_'. $delta, $edit['superfish_smallchc_'. $delta]);
+      variable_set('superfish_smallech_'. $delta, $edit['superfish_smallech_'. $delta]);
+      variable_set('superfish_smallicm_'. $delta, $edit['superfish_smallicm_'. $delta]);
+      variable_set('superfish_smallich_'. $delta, $edit['superfish_smallich_'. $delta]); 
       variable_set('superfish_supersubs_'. $delta, $edit['superfish_supersubs_'. $delta]);
       variable_set('superfish_minwidth_'. $delta, $edit['superfish_minwidth_'. $delta]);
       variable_set('superfish_maxwidth_'. $delta, $edit['superfish_maxwidth_'. $delta]);
@@ -651,6 +806,97 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
           }
         break;
       }
+      $smallscreen = variable_get('superfish_small_'. $delta, 2);
+      switch ($smallscreen) {
+        case 1 :
+          $sfplugins['smallscreen']['mode'] = 'always_active';
+        break;
+        case 2 :
+          $sfplugins['smallscreen']['mode'] = 'window_width';
+          $ssbp = variable_get('superfish_smallbp_'. $delta, 768);
+          $sfplugins['smallscreen']['breakpoint'] = ($ssbp != 768) ? (int)$ssbp : '';
+        break;
+        case 3 :
+          // Which method to use for UA detection.
+          $ssuam = variable_get('superfish_smalluam_'. $delta, 0);
+          switch ($ssuam) {
+            // Client-side.
+            case 0 :
+              $ssua = variable_get('superfish_smallua_'. $delta, 0);
+              switch ($ssua) {
+                case 0 :
+                  $sfplugins['smallscreen']['mode'] = 'useragent_predefined';
+                break;
+                case 1 :
+                  $sfplugins['smallscreen']['mode'] = 'useragent_custom';
+                  $ssual = drupal_strtolower(variable_get('superfish_smallual_'. $delta, ''));
+                  if (strpos($ssual, '*')) {
+                    $ssual = str_replace('*', '|', $ssual);
+                  }
+                  $ssual = '/(' . $ssual . ')/i';
+                  $sfplugins['smallscreen']['useragent'] = $ssual;
+                break;
+              }
+
+            break;
+            // Server-side.
+            case 1 :
+              if (isset($_SERVER['HTTP_USER_AGENT'])) {
+                $hua = drupal_strtolower($_SERVER['HTTP_USER_AGENT']);
+                $ssua = variable_get('superfish_smallua_'. $delta, 0);
+                switch ($ssua) {
+                  // Use the pre-defined list of mobile UA strings.
+                  case 0 :
+                    if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i', $hua)) {
+                      $sfplugins['smallscreen']['mode'] = 'active';
+                    }
+                  break;
+                  // Use the custom list of UA strings.
+                  case 1 :
+                    $ssual = variable_get('superfish_smallual_'. $delta, '');
+                    $ssual = drupal_strtolower($ssual);
+                    $ssuac = array();
+                    if (strpos($ssual, '*')) {
+                      $ssual = explode('*', $ssual);
+                      foreach ($ssual as $ua) {
+                        $ssuac[] = (strpos($hua, $ua)) ? 1 : 0;
+                      }
+                    }
+                    else {
+                      $ssuac[] = (strpos($hua, $ssual)) ? 1 : 0;
+                    }
+                    if (in_array(1, $ssuac)) {
+                      $sfplugins['smallscreen']['mode'] = 'always_active';
+                    }
+                  break;
+                }
+              }
+            break;
+          }
+        break;
+      }
+      if ($smallscreen > 0) {
+        $addselected = variable_get('superfish_smallasa_'. $delta, 0);
+        $menuclasses = variable_get('superfish_smallcmc_'. $delta, 0);
+        $hyperlinkclasses = variable_get('superfish_smallchc_'. $delta, 0);
+        $excludeclass_menu = variable_get('superfish_smallecm_'. $delta, '');
+        $excludeclass_hyperlink = variable_get('superfish_smallech_'. $delta, '');
+        $includeclass_menu = variable_get('superfish_smallicm_'. $delta, '');
+        $includeclass_hyperlink = variable_get('superfish_smallich_'. $delta, '');
+        $sfplugins['smallscreen']['addSelected'] = ($addselected == 1) ? TRUE : FALSE;
+        $sfplugins['smallscreen']['menuClasses'] = ($menuclasses == 1) ? TRUE : FALSE;
+        $sfplugins['smallscreen']['hyperlinkClasses'] = ($hyperlinkclasses == 1) ? TRUE : FALSE;
+        if ($menuclasses == 1 && !empty($excludeclass_menu)) {
+          $sfplugins['smallscreen']['excludeClass_menu'] = $excludeclass_menu;
+        }
+        if ($hyperlinkclasses == 1 && !empty($excludeclass_hyperlink)) {
+          $sfplugins['smallscreen']['excludeClass_hyperlink'] = $excludeclass_hyperlink;
+        }
+        if (!empty($includeclass_menu)) {
+          $sfplugins['smallscreen']['includeClass_menu'] = $includeclass_menu;
+        }
+        if (!empty($includeclass_hyperlink)) {
+          $sfplugins['smallscreen']['includeClass_hyperlink'] = $includeclass_hyperlink;
         }
       }
       $sfplugins['supposition'] = (variable_get('superfish_spp_' . $delta, 1) == 1) ? TRUE : FALSE;
@@ -661,11 +907,22 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
         $sfplugins['supersubs']['maxWidth'] = variable_get('superfish_maxwidth_' . $delta, '27');
         $sfplugins['supersubs']['extraWidth'] = 1;
       }
-      $sfplugins = array_remove_empty($sfplugins);
 
       if ($output = theme('superfish', $delta, $menu_name, $mlid, $sfsettings)) {
         $block['subject'] = $output['subject'];
         $block['content'] = filter_xss($output['content'], $allowed_tags = array('a', 'abbr', 'acronym', 'address', 'area', 'article', 'aside', 'audio', 'b', 'base', 'bdi', 'bdo', 'big', 'blockquote', 'br', 'button', 'canvas', 'caption', 'cite', 'code', 'col', 'colgroup', 'command', 'datalist', 'dd', 'del', 'details', 'dfn', 'div', 'dl', 'dt', 'em', 'embed', 'fieldset', 'figcaption', 'figure', 'footer', 'form', 'frame', 'frameset', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hgroup', 'hr', 'i', 'iframe', 'img', 'input', 'ins', 'kbd', 'keygen', 'label', 'legend', 'li', 'map', 'mark', 'meter', 'nav', 'noframes', 'noscript', 'object', 'ol', 'optgroup', 'option', 'output', 'p', 'param', 'pre', 'progress', 'q', 'rp', 'rt', 'ruby', 'samp', 'script', 'section', 'select', 'small', 'source', 'span', 'strong', 'sub', 'summary', 'sup', 'table', 'tbody', 'td', 'textarea', 'tfoot', 'th', 'thead', 'time', 'tr', 'track', 'tt', 'ul', 'var', 'video', 'wbr'));
+        
+        // Creating a title for the <select> title.
+        if ($smallscreen !== 0) {
+          $smallset = variable_get('superfish_smallset_'. $delta, '');
+          if (empty($smallset)) {
+            $sfplugins['smallscreen']['title'] = $output['subject'];
+          }
+          else {
+            $sfplugins['smallscreen']['title'] = $smallset;
+          }
+        }
+        $sfplugins = array_remove_empty($sfplugins);
 
         // Prepare the JavaScript settings.
         $javascript['superfish'][$delta]['id'] = $delta;
@@ -720,6 +977,10 @@ function superfish_block_validate($form, &$form_state) {
     $speed = $form_state['values']['superfish_speed_'. $delta];
     $delay = $form_state['values']['superfish_delay_'. $delta];
     $pathclass = $form_state['values']['superfish_pathclass_'. $delta];
+    $small = $form_state['values']['superfish_small_'. $delta];
+    $smallbp = $form_state['values']['superfish_smallbp_'. $delta];
+    $smallua = $form_state['values']['superfish_smallua_'. $delta];
+    $smallual = $form_state['values']['superfish_smallual_'. $delta];
     $minwidth = $form_state['values']['superfish_minwidth_'. $delta];
     $maxwidth = $form_state['values']['superfish_maxwidth_'. $delta];
     $mcexclude = $form_state['values']['superfish_mcexclude_'. $delta];
@@ -741,6 +1002,14 @@ function superfish_block_validate($form, &$form_state) {
     }
     if (is_numeric($pathclass)) {
       form_set_error('superfish_pathclass_'. $delta, t('<strong>Path class</strong>: unacceptable value entered.'));
+    if ($small == 2 && $smallbp == '') {
+      form_set_error('superfish_smallbp_'. $delta, t('<strong>sf-Smallscreen: Breakpoint</strong>: field cannot be empty.'));
+    }
+    if (!is_numeric($smallbp)) {
+      form_set_error('superfish_smallbp_'. $delta, t('<strong>sf-Smallscreen: Breakpoint</strong>: unacceptable value entered.'));
+    }
+    if ($small == 3 && $smallua == 1 && $smallual == '') {
+      form_set_error('superfish_smallual_'. $delta, t('<strong>sf-Smallscreen: Custom list of user agents</strong>: field cannot be empty.'));
     }
     if (empty($minwidth)) {
       form_set_error('superfish_minwidth_'. $delta, t('<strong>Supersubs minimum width</strong> field cannot be empty.'));
@@ -858,7 +1127,8 @@ function superfish_init() {
     $directory . "/superfish.js\n" .
     $directory . "/supersubs.js\n" .
     $directory . "/supposition.js\n" .
-    $directory . "/sftouchscreen.js";
+    $directory . "/sftouchscreen.js\n" .
+    $directory . "/sfsmallscreen.js";
 
   $sf_library = variable_get('superfish_slp', $slp_default);
   $sf_library = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", trim($sf_library));
