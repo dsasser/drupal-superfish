@@ -23,7 +23,7 @@
       // Check if we are to apply any other plug-in to it.
       if (options.plugins || false) {
         if (options.plugins.touchscreen || false) {
-          list.sftouchscreen();
+          list.sftouchscreen(options.plugins.touchscreen);
         }
         if (options.plugins.smallscreen || false) {
           list.sfsmallscreen(options.plugins.smallscreen);
