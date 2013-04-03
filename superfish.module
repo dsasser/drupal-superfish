@@ -163,6 +163,17 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
         '#title' => t('Drop shadows'),
         '#default_value' => variable_get('superfish_shadow_'. $delta, 1),
       );
+      $form['sf-settings']['sf-more'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('More options'),
+        '#collapsible' => TRUE,
+        '#collapsed' => TRUE,
+      );
+      $form['sf-settings']['sf-more']['superfish_use_item_theme_' . $delta] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Use a theme function for menu items.') . ' <em>(' . t('Default') . ': ' . t('enabled') . ')</em><br /><small>' . t('(Disabling this feature can result in performance improvements, depending on the number of items in the menu.)') . '</small>',
+        '#default_value' => variable_get('superfish_use_item_theme_' . $delta, 1),
+      );
       $form['sf-plugins'] = array(
         '#type' => 'fieldset',
         '#title' => t('Superfish plugins'),
@@ -675,6 +686,7 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
       variable_set('superfish_itemcount_'. $delta, $edit['superfish_itemcount_'. $delta]);
       variable_set('superfish_itemcounter_'. $delta, $edit['superfish_itemcounter_'. $delta]);
       variable_set('superfish_itemdepth_'. $delta, $edit['superfish_itemdepth_'. $delta]);
+      variable_set('superfish_use_item_theme_' . $delta, $edit['superfish_use_link_theme_' . $delta]);
       variable_set('superfish_hhldescription_'. $delta, $edit['superfish_hhldescription_'. $delta]);
       variable_set('superfish_hldescription_'. $delta, $edit['superfish_hldescription_'. $delta]);
       variable_set('superfish_hldmenus_'. $delta, $edit['superfish_hldmenus_'. $delta]);
@@ -1450,25 +1462,88 @@ function theme_superfish_build($id, $menu, $depth = -1, $trail = NULL, $sfsettin
       $menu_item['link']['localized_options']['attributes']['class'] = implode(' ', array_remove_empty($link_class));
 
       // Render the menu item.
-      $output['content'] .= '<li id="menu-'. $mlid .'-'. $id .'"';
-      $output['content'] .= ($item_class) ? ' class="'. trim($item_class) .'">' : '>';
-      $output['content'] .= ($megamenu_column) ? '<div class="sf-megamenu-column">' : '';
-      $output['content'] .= isset($whl[0]) ? $whl[0] : '';
-      $output['content'] .= theme('menu_item_link', $menu_item['link']);
-      $output['content'] .= isset($whl[1]) ? $whl[1] : '';
-      $output['content'] .= ($megamenu_wrapper) ? '<ul class="sf-megamenu"><li class="sf-megamenu-wrapper '. $item_class .'">' : '';
-      $output['content'] .= ($show_children) ? (isset($wul[0]) ? $wul[0] : '') : '';
-      $output['content'] .= ($show_children) ? (($megamenu_content) ? '<ol>' : '<ul>') : '';
-      $output['content'] .= ($show_children) ? $children['content'] : '';
-      $output['content'] .= ($show_children) ? (($megamenu_content) ? '</ol>' : '</ul>') : '';
-      $output['content'] .= ($show_children) ? (isset($wul[1]) ? $wul[1] : '') : '';
-      $output['content'] .= ($megamenu_wrapper) ? '</li></ul>' : '';
-      $output['content'] .= ($megamenu_column) ? '</div>' : '';
-      $output['content'] .= '</li>';
+      // Should a theme be used for menu items?
+      if ($settings['use_item_theme']) {
+        $item_variables = array(
+          'element' => array(
+            'attributes' => array(
+              'id' => 'menu-' . $mlid . '-' . $id,
+              'class' => trim($item_class),
+            ),
+            'below' => ($show_children) ? $children['content'] : NULL,
+            'item' => $menu_item,
+            'localized_options' => $link_options,
+          ),
+          'properties' => array(
+            'megamenu' => array(
+              'megamenu_column' => $megamenu_column,
+              'megamenu_wrapper' => $megamenu_wrapper,
+              'megamenu_content' => $megamenu_content,
+            ),
+            'use_link_theme' => $settings['use_link_theme'],
+            'wrapper' => $whl,
+          ),
+        );
+        $output['content'] .= theme('superfish_menu_item', $item_variables);
+      }
+      else {
+        $output['content'] .= '<li id="menu-'. $mlid .'-'. $id .'"';
+        $output['content'] .= ($item_class) ? ' class="'. trim($item_class) .'">' : '>';
+        $output['content'] .= ($megamenu_column) ? '<div class="sf-megamenu-column">' : '';
+        $output['content'] .= isset($whl[0]) ? $whl[0] : '';
+        $output['content'] .= theme('menu_item_link', $menu_item['link']);
+        $output['content'] .= isset($whl[1]) ? $whl[1] : '';
+        $output['content'] .= ($megamenu_wrapper) ? '<ul class="sf-megamenu"><li class="sf-megamenu-wrapper '. $item_class .'">' : '';
+        $output['content'] .= ($show_children) ? (isset($wul[0]) ? $wul[0] : '') : '';
+        $output['content'] .= ($show_children) ? (($megamenu_content) ? '<ol>' : '<ul>') : '';
+        $output['content'] .= ($show_children) ? $children['content'] : '';
+        $output['content'] .= ($show_children) ? (($megamenu_content) ? '</ol>' : '</ul>') : '';
+        $output['content'] .= ($show_children) ? (isset($wul[1]) ? $wul[1] : '') : '';
+        $output['content'] .= ($megamenu_wrapper) ? '</li></ul>' : '';
+        $output['content'] .= ($megamenu_column) ? '</div>' : '';
+        $output['content'] .= '</li>';
+      }
     }
   }
   $output['total_children'] = $total_children;
   $output['parent_children'] = $parent_children;
   $output['single_children'] = $single_children;
+  return $output;
+}
+
+/**
+ * Returns HTML for a menu item.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - element: Structured array data for a menu item.
+ *   - properties: Various properties of a menu item.
+ *
+ * @ingroup themeable
+ */
+function theme_superfish_menu_item($variables) {
+  $element = $variables['element'];
+  $properties = $variables['properties'];
+  $sub_menu = '';
+  
+  if ($element['below']) {
+    $sub_menu .= isset($variables['wrapper']['wul'][0]) ? $variables['wrapper']['wul'][0] : '';
+    $sub_menu .= ($properties['megamenu']['megamenu_content']) ? '<ol>' : '<ul>';
+    $sub_menu .= $element['below'];
+    $sub_menu .= ($properties['megamenu']['megamenu_content']) ? '</ol>' : '</ul>';
+    $sub_menu .= isset($variables['wrapper']['wul'][1]) ? $variables['wrapper']['wul'][1] : '';
+  }
+
+  $output = '<li' . drupal_attributes($element['attributes']) . '>';
+  $output .= ($properties['megamenu']['megamenu_column']) ? '<div class="sf-megamenu-column">' : '';
+  $output .= isset($properties['wrapper']['whl'][0]) ? $properties['wrapper']['whl'][0] : '';
+  $output .= theme('menu_item_link', $menu_item['link']);
+  $output .= isset($properties['wrapper']['whl'][1]) ? $properties['wrapper']['whl'][1] : '';
+  $output .= ($properties['megamenu']['megamenu_wrapper']) ? '<ul class="sf-megamenu"><li class="sf-megamenu-wrapper ' . $element['attributes']['class'] . '">' : '';
+  $output .= $sub_menu;
+  $output .= ($properties['megamenu']['megamenu_wrapper']) ? '</li></ul>' : '';
+  $output .= ($properties['megamenu']['megamenu_column']) ? '</div>' : '';
+  $output .= '</li>';
+
   return $output;
 }
