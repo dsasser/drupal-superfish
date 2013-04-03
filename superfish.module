@@ -1406,15 +1406,15 @@ function theme_superfish_build($id, $menu, $depth = -1, $trail = NULL, $sfsettin
         // Megamenu is still beta, there is a good chance much of this will be changed.
         if (!empty($settings['megamenu_exclude'])) {
           if (is_array($settings['megamenu_exclude'])) {
-            $megamenu = (in_array($mlid, $settings['megamenu_exclude'])) ? 0 : $megamenu;
+            $megamenu_below = (in_array($mlid, $settings['megamenu_exclude'])) ? 0 : $megamenu;
           }
           else {
-            $megamenu = ($settings['megamenu_exclude'] == $mlid) ? 0 : $megamenu;
+            $megamenu_below = ($settings['megamenu_exclude'] == $mlid) ? 0 : $megamenu;
           }
           // Send the result to the sub-menu.
-          $sfsettings['megamenu'] = $megamenu;
+          $sfsettings['megamenu'] = $megamenu_below;
         }
-        if ($megamenu == 1) {
+        if ($megamenu_below == 1) {
           $megamenu_wrapper = ($menu_item['link']['depth'] == $settings['megamenu_depth']) ? TRUE : FALSE;
           $megamenu_column = ($menu_item['link']['depth'] == $settings['megamenu_depth'] + 1) ? TRUE : FALSE;
           $megamenu_content = ($menu_item['link']['depth'] >= $settings['megamenu_depth'] && $menu_item['link']['depth'] <= $settings['megamenu_levels']) ? TRUE : FALSE;
