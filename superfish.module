@@ -1200,7 +1200,13 @@ function superfish_theme() {
         'trail' => NULL,
         'sfsettings' => NULL
       ),
-    )
+    ),
+    'superfish_menu_item' => array(
+      'variables' => array(
+        'element' => NULL,
+        'properties' => NULL,
+      ),
+    ),
   );
 }
 
