@@ -14,6 +14,13 @@ function superfish_uninstall() {
 }
 
 /**
+ * Implements hook_enable().
+ */
+function superfish_enable() {
+  drupal_set_message(check_plain('To use Superfish go to the administer blocks page and enable a Superfish block.'));
+}
+
+/**
  * Implements hook_requirements().
  */
 function superfish_requirements($phase) {
