@@ -14,10 +14,17 @@ function superfish_menu() {
     'description' => 'Configure Superfish Menus',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('superfish_menu_settings'),
-    'access arguments' => array('administer site configuration'),
+    'access arguments' => array('administer superfish'),
     'file' => 'superfish.admin.inc',
   );
   return $items;
+}
+
+/**
+ * Implementation of hook_perm().
+ */
+function superfish_perm() {
+  return array('administer menu');
 }
 
 /**
