@@ -1215,7 +1215,7 @@ function superfish_i18nmenu_node_block_info_alter(&$info) {
 function superfish_build_page_trail($page_menu) {
   $trail = array();
   foreach ($page_menu as $item) {
-    if ($item['link']['in_active_trail']) {
+    if ($item['link']['in_active_trail'] || ($item['link']['href'] == '<front>' && drupal_is_front_page())) {
       $trail[] = $item['link']['mlid'];
     }
     if ($item['below']) {
