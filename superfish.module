@@ -110,6 +110,7 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
       $form['sf-settings']['superfish_style_'. $delta] = array(
         '#type' => 'select',
         '#title' => t('Style'),
+        '#description' => '<em>(' . t('Default') . ': ' . t('None') . ')</em>',
         '#default_value' => variable_get('superfish_style_'. $delta, 'none'),
         '#options' => superfish_styles(),
       );
@@ -119,6 +120,7 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
         '#description' => t('The speed of the animation either in <strong>milliseconds</strong> or pre-defined values (<strong>slow, normal, fast</strong>).') . ' <em>(' . t('Default') . ': fast)</em>',
         '#default_value' => variable_get('superfish_speed_'. $delta, 'fast'),
         '#size' => 15,
+        '#required' => TRUE,
       );
       $form['sf-settings']['superfish_delay_'. $delta] = array(
         '#type' => 'textfield',
@@ -422,6 +424,7 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
         '#description' => t('Minimum width for sub-menus, in <strong>em</strong> units.') . ' <em>(' . t('Default') . ': 12)</em>',
         '#default_value' => variable_get('superfish_minwidth_'. $delta, '12'),
         '#size' => 20,
+        '#required' => TRUE,
       );
       $form['sf-plugins']['sf-supersubs']['superfish_maxwidth_'. $delta] = array(
         '#type' => 'textfield',
@@ -429,6 +432,7 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
         '#description' => t('Maximum width for sub-menus, in <strong>em</strong> units.') . ' <em>(' . t('Default') . ': 27)</em>',
         '#default_value' => variable_get('superfish_maxwidth_'. $delta, '27'),
         '#size' => 20,
+        '#required' => TRUE,
       );
       $form['sf-megamenu'] = array(
         '#type' => 'fieldset',
@@ -1018,9 +1022,6 @@ function superfish_block_validate($form, &$form_state) {
     if ($style != 'none' && superfish_styles('path', $style) == '') {
       form_set_error('superfish_style_'. $delta, t('Cannot find the CSS file of the selected style.'));
     }
-    if ($speed == '') {
-      form_set_error('superfish_speed_'. $delta, t('<strong>Animation speed</strong> field cannot be empty.'));
-    }
     elseif (!is_numeric($speed) && !in_array($speed, array('slow', 'normal', 'fast'))) {
       form_set_error('superfish_speed_'. $delta, t('<strong>Animation speed</strong>: unacceptable value entered.'));
     }
@@ -1048,19 +1049,11 @@ function superfish_block_validate($form, &$form_state) {
     if ($small == 3 && $smallua == 1 && $smallual == '') {
       form_set_error('superfish_smallual_'. $delta, t('<strong>sf-Smallscreen: Custom list of user agents</strong>: field cannot be empty.'));
     }
-    if (empty($minwidth)) {
-      form_set_error('superfish_minwidth_'. $delta, t('<strong>Supersubs minimum width</strong> field cannot be empty.'));
-      $supersubs_error = TRUE;
-    }
-    elseif (!is_numeric($minwidth)) {
+    if (!is_numeric($minwidth)) {
       form_set_error('superfish_minwidth_'. $delta, t('<strong>Supersubs minimum width</strong>: unacceptable value entered.'));
       $supersubs_error = TRUE;
     }
-    if (empty($maxwidth)) {
-      form_set_error('superfish_maxwidth_'. $delta, t('<strong>Supersubs maximum width</strong> cannot be empty.'));
-      $supersubs_error = TRUE;
-    }
-    elseif (!is_numeric($maxwidth)) {
+    if (!is_numeric($maxwidth)) {
       form_set_error('superfish_maxwidth_'. $delta, t('<strong>Supersubs maximum width</strong>: unacceptable value entered.'));
       $supersubs_error = TRUE;
     }
