@@ -36,6 +36,9 @@ function superfish_requirements($phase) {
     elseif (file_exists('sites/all/libraries/superfish/superfish.js')) {
       $superfish_installed = TRUE;
     }
+    else {
+      $superfish_installed = FALSE;
+    }
     if ($superfish_installed) {
       $requirements['superfish']['value'] = $t('Installed');
       $requirements['superfish']['severity'] = REQUIREMENT_OK;
