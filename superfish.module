@@ -1122,7 +1122,7 @@ function superfish_styles($display = 'list', $style = NULL) {
       $output = $files[$style]->filename;
     }
     else {
-      watchdog('page not found', $files[$style]->uri, NULL, WATCHDOG_ERROR);
+      watchdog('page not found', 'Required files for the Superfish \'%style\' style cannot be found.', array('%style' => $style), WATCHDOG_WARNING);
       $output = '';
     }
   }
