@@ -1,3 +1,16 @@
+Version 1.9-rc1, 2013-04-10
+----------------------
+- #1158926 Fixed hook_requirements; limited it to runtime phase.
+- #1420930 Added sf-Smallscreen for small-screen compatibility.
+- #1279760 Added new features to sf-Touchscreen.
+- #1141858 Changed the Style default value to 'None'.
+- #1937806 Changed the Menu Parent default value to the 'Primary links'.
+- #1842966 Added a theme for menu items.
+- #1612498 Improved the block configuration form validation.
+- General block configuration form imporvements.
+- Added 'administer superfish' permission.
+- Fixed the <front> and active-trail bug.
+
 Version 1.9-beta5, 2012-10-25
 ----------------------
 - #804616 Fixed speed value and validation bugs. (Comments 8th and 10th)
