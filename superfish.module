@@ -1109,7 +1109,7 @@ function superfish_styles($display = 'list', $style = NULL) {
   }
   $files = (file_exists($directory)) ? file_scan_directory($directory, '\.css$', array('.', '..'), 0, TRUE, 'name') : '';
   if ($display == 'list') {
-    $output = array('none' => t('None'));
+    $output = array('none' => '- '. t('None') .' -');
     if (is_array($files)) {
       foreach ($files as $file) {
         $output[$file->name] = drupal_ucfirst($file->name);
