@@ -728,6 +728,7 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
       $sfsettings['wrapul'] = variable_get('superfish_wrapul_'. $delta, '');
       $sfsettings['wraphl'] = variable_get('superfish_wraphl_'. $delta, '');
       $sfsettings['wraphlt'] = variable_get('superfish_wraphlt_'. $delta, '');
+      $sfsettings['use_item_theme'] = variable_get('superfish_use_item_theme_'. $delta, 1);
       $sfsettings['hidelinkdescription'] = variable_get('superfish_hhldescription_'. $delta, 0);
       $sfsettings['linkdescription'] = variable_get('superfish_hldescription_'. $delta, 0);
       $sfsettings['hldmenus'] = variable_get('superfish_hldmenus_'. $delta, '');
@@ -1542,7 +1543,7 @@ function theme_superfish_menu_item($variables) {
   $output = '<li' . drupal_attributes($element['attributes']) . '>';
   $output .= ($properties['megamenu']['megamenu_column']) ? '<div class="sf-megamenu-column">' : '';
   $output .= isset($properties['wrapper']['whl'][0]) ? $properties['wrapper']['whl'][0] : '';
-  $output .= theme('menu_item_link', $menu_item['link']);
+  $output .= theme('menu_item_link', $element['item']['link']);
   $output .= isset($properties['wrapper']['whl'][1]) ? $properties['wrapper']['whl'][1] : '';
   $output .= ($properties['megamenu']['megamenu_wrapper']) ? '<ul class="sf-megamenu"><li class="sf-megamenu-wrapper ' . $element['attributes']['class'] . '">' : '';
   $output .= $sub_menu;
