@@ -779,10 +779,10 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
           case 3 :
             // Which method to use for UA detection.
             $tsuam = variable_get('superfish_touchuam_'. $delta, 0);
+            $tsua = variable_get('superfish_touchua_'. $delta, 0);
             switch ($tsuam) {
               // Client-side.
               case 0 :
-                $tsua = variable_get('superfish_touchua_'. $delta, 0);
                 switch ($tsua) {
                   case 0 :
                     $sfplugins['touchscreen']['mode'] = 'useragent_predefined';
@@ -793,7 +793,6 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
                     if (strpos($tsual, '*')) {
                       $tsual = str_replace('*', '|', $tsual);
                     }
-                    $tsual = '/(' . $tsual . ')/i';
                     $sfplugins['touchscreen']['useragent'] = $tsual;
                   break;
                 }
@@ -803,7 +802,6 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
               case 1 :
                 if (isset($_SERVER['HTTP_USER_AGENT'])) {
                   $hua = drupal_strtolower($_SERVER['HTTP_USER_AGENT']);
-                  $tsua = variable_get('superfish_touchua_'. $delta, 0);
                   switch ($tsua) {
                     // Use the pre-defined list of mobile UA strings.
                     case 0 :
@@ -813,8 +811,7 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
                     break;
                     // Use the custom list of UA strings.
                     case 1 :
-                      $tsual = variable_get('superfish_touchual_'. $delta, '');
-                      $tsual = drupal_strtolower($tsual);
+                      $tsual = drupal_strtolower(variable_get('superfish_touchual_'. $delta, ''));
                       $tsuac = array();
                       if (strpos($tsual, '*')) {
                         $tsual = explode('*', $tsual);
@@ -826,7 +823,7 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
                         $tsuac[] = (strpos($hua, $tsual)) ? 1 : 0;
                       }
                       if (in_array(1, $tsuac)) {
-                        $sfplugins['touchscreen']['mode'] = 'active';
+                        $sfplugins['touchscreen']['mode'] = 'always_active';
                       }
                     break;
                   }
@@ -851,10 +848,10 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
           case 3 :
             // Which method to use for UA detection.
             $ssuam = variable_get('superfish_smalluam_'. $delta, 0);
+            $ssua = variable_get('superfish_smallua_'. $delta, 0);
             switch ($ssuam) {
               // Client-side.
               case 0 :
-                $ssua = variable_get('superfish_smallua_'. $delta, 0);
                 switch ($ssua) {
                   case 0 :
                     $sfplugins['smallscreen']['mode'] = 'useragent_predefined';
@@ -865,7 +862,6 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
                     if (strpos($ssual, '*')) {
                       $ssual = str_replace('*', '|', $ssual);
                     }
-                    $ssual = '/(' . $ssual . ')/i';
                     $sfplugins['smallscreen']['useragent'] = $ssual;
                   break;
                 }
@@ -875,18 +871,16 @@ function superfish_block($op = 'list', $delta = 0, $edit = array()) {
               case 1 :
                 if (isset($_SERVER['HTTP_USER_AGENT'])) {
                   $hua = drupal_strtolower($_SERVER['HTTP_USER_AGENT']);
-                  $ssua = variable_get('superfish_smallua_'. $delta, 0);
                   switch ($ssua) {
                     // Use the pre-defined list of mobile UA strings.
                     case 0 :
                       if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i', $hua)) {
-                        $sfplugins['smallscreen']['mode'] = 'active';
+                        $sfplugins['smallscreen']['mode'] = 'always_active';
                       }
                     break;
                     // Use the custom list of UA strings.
                     case 1 :
-                      $ssual = variable_get('superfish_smallual_'. $delta, '');
-                      $ssual = drupal_strtolower($ssual);
+                      $ssual = drupal_strtolower(variable_get('superfish_smallual_'. $delta, ''));
                       $ssuac = array();
                       if (strpos($ssual, '*')) {
                         $ssual = explode('*', $ssual);
