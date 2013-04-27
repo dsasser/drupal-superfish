@@ -1,3 +1,9 @@
+Version 1.9, 2013-04-27
+----------------------
+- #1967182 Added a Drush Make file.
+- Chanaged the Drush command; used the Colorbox module Drush command.
+- Fixed some bugs.
+
 Version 1.9-rc1, 2013-04-10
 ----------------------
 - #1158926 Fixed hook_requirements; limited it to runtime phase.
