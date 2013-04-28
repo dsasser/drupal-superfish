@@ -24,7 +24,7 @@ function superfish_menu() {
  * Implementation of hook_perm().
  */
 function superfish_perm() {
-  return array('administer menu');
+  return array('administer superfish');
 }
 
 /**
