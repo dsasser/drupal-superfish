@@ -1,0 +1,7 @@
+name: 'Superfish'
+type: module
+description: 'jQuery Superfish plugin integration.'
+package: User interface
+
+version: VERSION
+core: 8.x
