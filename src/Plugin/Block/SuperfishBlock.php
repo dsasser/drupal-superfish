@@ -486,7 +486,7 @@ class SuperfishBlock extends SystemMenuBlock {
     $delay = $form_state->getValue(array('sf-plugins', 'sf-touchscreen', 'sf-touchscreen-useragent', 'superfish_delay'));
     $delay = $form_state->getValue(array('sf-plugins', 'sf-touchscreen', 'sf-touchscreen-useragent', 'superfish_delay'));
     $touch = $form_state->getValue(array('sf-plugins', 'sf-touchscreen', 'sf-touchscreen-useragent', 'superfish_touch'));
-    $touchbp = $form_state->getValue(array('sf-plugins', 'sf-touchscreen', 'sf-touchscreen-useragent', 'superfish_touchbp'));
+    $touchbp = $form_state->getValue(array('sf-plugins', 'sf-touchscreen', 'sf-touchscreen-windowwidth', 'superfish_touchbp'));
     $touchua = $form_state->getValue(array('sf-plugins', 'sf-touchscreen', 'sf-touchscreen-useragent', 'superfish_touchua'));
     $touchual = $form_state->getValue(array('sf-plugins', 'sf-touchscreen', 'sf-touchscreen-useragent', 'superfish_touchual'));
     $small = $form_state->getValue(array('sf-plugins', 'sf-smallscreen', 'sf-smallscreen-useragent', 'superfish_small'));
@@ -565,7 +565,7 @@ class SuperfishBlock extends SystemMenuBlock {
 
     $this->configuration['small'] = $form_state->getValue(array('sf-plugins', 'sf-smallscreen', 'superfish_small'));
     $this->configuration['smallact'] = $form_state->getValue(array('sf-plugins', 'sf-smallscreen', 'superfish_smallact'));
-    $this->configuration['smallbp'] = $form_state->getValue(array('sf-plugins', 'sf-smallscreen', 'superfish_smallbp'));
+    $this->configuration['smallbp'] = $form_state->getValue(array('sf-plugins', 'sf-smallscreen', 'sf-smallscreen-windowwidth', 'superfish_smallbp'));
     $this->configuration['smallua'] = $form_state->getValue(array('sf-plugins', 'sf-smallscreen', 'sf-smallscreen-useragent', 'superfish_smallua'));
     $this->configuration['smallual'] = $form_state->getValue(array('sf-plugins', 'sf-smallscreen', 'sf-smallscreen-useragent', 'superfish_smallual'));
     $this->configuration['smalluam'] = $form_state->getValue(array('sf-plugins', 'sf-smallscreen', 'sf-smallscreen-useragent', 'superfish_smalluam'));
