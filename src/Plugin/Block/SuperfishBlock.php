@@ -877,6 +877,7 @@ class SuperfishBlock extends SystemMenuBlock {
 
     // Title for the small-screen menu.
     if ($smallscreen) {
+      $title = '';
       switch ($type) {
         case 0 :
           $title = $this->configuration['smallset'];
@@ -885,7 +886,7 @@ class SuperfishBlock extends SystemMenuBlock {
           $title = $this->configuration['smallamt'];
         break;
       }
-      $sfplugins['smallscreen']['title'] = $this->label();
+      $sfplugins['smallscreen']['title'] = $title ? $title : $this->label();
     }
     $sfplugins = superfish_array_remove_empty($sfplugins);
 
