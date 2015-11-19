@@ -106,6 +106,7 @@ function template_preprocess_superfish_menu_items(array &$variables) {
     if (null !== $menu_item->link && !($menu_item->link instanceof InaccessibleMenuLink)) {
 
       $item_class = $link_class = array();
+      $multicolumn_wrapper = $multicolumn_column = $multicolumn_content = FALSE;
 
       // Menu link properties.
       $link = $menu_item->link->getPluginDefinition();
@@ -123,19 +124,17 @@ function template_preprocess_superfish_menu_items(array &$variables) {
         'hasChildren'   => $menu_item->hasChildren,
         'inActiveTrail' => $menu_item->inActiveTrail
       );
-
+      
+      // Adding the necessary "active-trail" class.
       if (array_key_exists($key, $active_trails)) {
         $item_class[] = 'active-trail';
       }
-
-      // Adding the necessary "active-trail" class.
-      $item_class[] = $item['inActiveTrail'] ? 'active-trail' : '';
 
       // Add menu link depth classes to the <li> element and its link.
       $link_class[] = $settings['itemdepth'] ? 'sf-depth-' . $item['depth'] : '';
       $item_class[] = $settings['itemdepth'] ? 'sf-depth-' . $item['depth'] : '';
       // Indicates a cloned parent link, i.e. does not exist in the actual menu tree.
-      $item_class[] = $element['cloned_parent'] ? 'sf-clone-parent' : '';
+      $item_class[] = $element['#cloned_parent'] ? 'sf-clone-parent' : '';
 
       // Adding custom <li> classes.
       if (strpos($settings['liclass'], ' ') !== FALSE) {
@@ -193,7 +192,7 @@ function template_preprocess_superfish_menu_items(array &$variables) {
           $cloned_parent->subtree = [];
         }
         else {
-          $clone_parent = FALSE;
+          $cloned_parent = FALSE;
         }
 
         // Render the sub-menu.
