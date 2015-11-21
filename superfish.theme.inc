@@ -124,9 +124,9 @@ function template_preprocess_superfish_menu_items(array &$variables) {
         'hasChildren'   => $menu_item->hasChildren,
         'inActiveTrail' => $menu_item->inActiveTrail
       );
-      
+
       // Adding the necessary "active-trail" class.
-      if (array_key_exists($key, $active_trails)) {
+      if (array_key_exists($key, $active_trails) || $item['inActiveTrail'] != FALSE) {
         $item_class[] = 'active-trail';
       }
 
