@@ -19,9 +19,15 @@ function superfish_effects() {
     'horizontal' => t('Horizontal'),
     'diagonal' => t('Diagonal'));
 
-  if (file_exists('profiles/' . drupal_get_profile() . '/libraries/easing')) {
+  // Ensure the Libraries API module is installed and working.
+  if (function_exists('libraries_get_path') && libraries_get_path('superfish') !== FALSE) {
+    $directory = libraries_get_path('easing');
+  }
+  // Otherwise use the default directory.
+  elseif (file_exists('profiles/' . drupal_get_profile() . '/libraries/easing')) {
     $directory = 'profiles/' . drupal_get_profile() . '/libraries/easing';
-  } else {
+  }
+  else {
     $directory = 'sites/all/libraries/easing';
   }
 
