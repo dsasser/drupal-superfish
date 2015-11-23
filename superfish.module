@@ -1803,15 +1803,16 @@ function theme_superfish($variables) {
         else {
           $wmul = array();
         }
+        $classes = 'menu sf-menu sf-' . $menu_name . ' sf-' . $sfsettings['type'] . ' sf-style-' . $sfsettings['style'];
+        $classes .= ($sfsettings['itemcounter']) ? ' sf-total-items-' . $menu_tree['total_children'] : '';
+        $classes .= ($sfsettings['itemcounter']) ? ' sf-parent-items-' . $menu_tree['parent_children'] : '';
+        $classes .= ($sfsettings['itemcounter']) ? ' sf-single-items-' . $menu_tree['single_children'] : '';
+        $classes .= ($sfsettings['ulclass']) ? ' ' . trim($sfsettings['ulclass']) : '';
+        $classes .= ($language->direction == 1) ? ' rtl' : '';
         $output['content'] = isset($wmul[0]) ? $wmul[0] : '';
-        $output['content'] .= '<ul id="superfish-' . $id . '"';
-        $output['content'] .= ' class="menu sf-menu sf-' . $menu_name . ' sf-' . $sfsettings['type'] . ' sf-style-' . $sfsettings['style'];
-        $output['content'] .= ($sfsettings['itemcounter']) ? ' sf-total-items-' . $menu_tree['total_children'] : '';
-        $output['content'] .= ($sfsettings['itemcounter']) ? ' sf-parent-items-' . $menu_tree['parent_children'] : '';
-        $output['content'] .= ($sfsettings['itemcounter']) ? ' sf-single-items-' . $menu_tree['single_children'] : '';
-        $output['content'] .= ($sfsettings['ulclass']) ? ' ' . $sfsettings['ulclass'] : '';
-        $output['content'] .= ($language->direction == 1) ? ' rtl' : '';
-        $output['content'] .= '">' . $menu_tree['content'] . '</ul>';
+        $output['content'] .= '<ul ' . drupal_attributes(array('id' => 'superfish-' . $id, 'class' => $classes)) . '>';
+        $output['content'] .= $menu_tree['content'];
+        $output['content'] .= '</ul>';
         $output['content'] .= isset($wmul[1]) ? $wmul[1] : '';
       }
     }
@@ -1865,12 +1866,12 @@ function theme_superfish_build($variables) {
       $item_class[] = ($settings['itemcount'] == 1) ? 'sf-item-' . $i : '';
       $item_class[] = ($settings['itemdepth'] == 1) ? 'sf-depth-' . $menu_item['link']['depth'] : '';
       $link_class[] = ($settings['itemdepth'] == 1) ? 'sf-depth-' . $menu_item['link']['depth'] : '';
-      $item_class[] = ($settings['liclass']) ? $settings['liclass'] : '';
+      $item_class[] = ($settings['liclass']) ? trim($settings['liclass']) : '';
       $item_class[] = ($clone_parent !== FALSE) ? 'sf-clone-parent' : '';
       if (strpos($settings['hlclass'], ' ')) {
         $l = explode(' ', $settings['hlclass']);
         foreach ($l as $c) {
-          $link_class[] = $c;
+          $link_class[] = trim($c);
         }
       }
       else {
@@ -2003,7 +2004,7 @@ function theme_superfish_build($variables) {
         $single_children++;
       }
 
-      $item_class = implode(' ', superfish_array_filter($item_class));
+      $item_class = trim(implode(' ', superfish_array_filter($item_class)));
 
       if (isset($menu_item['link']['localized_options']['attributes']['class'])) {
         $link_class_current = $menu_item['link']['localized_options']['attributes']['class'];
@@ -2054,8 +2055,7 @@ function theme_superfish_build($variables) {
         $output['content'] .= theme('superfish_menu_item', $item_variables);
       }
       else {
-        $output['content'] .= '<li id="menu-' . $mlid . '-' . $id . '"';
-        $output['content'] .= ($item_class) ? ' class="' . trim($item_class) . '">' : '>';
+        $output['content'] .= '<li' . drupal_attributes(array('id' => 'menu-' . $mlid . '-' . $id, 'class' => $item_class)) . '>';
         $output['content'] .= ($megamenu_column) ? '<div class="sf-megamenu-column">' : '';
         $output['content'] .= isset($whl[0]) ? $whl[0] : '';
         if ($settings['use_link_theme']) {
