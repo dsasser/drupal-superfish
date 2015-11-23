@@ -1522,7 +1522,7 @@ function superfish_effects() {
 function superfish_library($type = NULL, $name = NULL, $action = 'add') {
   $directory = superfish_get_path('superfish');
   $directory_easing = superfish_get_path('easing');
-  $slp_default = $directory . "/jquery.hoverIntent.minified.js\n" .
+  $sf_library = $directory . "/jquery.hoverIntent.minified.js\n" .
     $directory . "/jquery.bgiframe.min.js\n" .
     $directory . "/superfish.js\n" .
     $directory . "/supersubs.js\n" .
@@ -1531,7 +1531,6 @@ function superfish_library($type = NULL, $name = NULL, $action = 'add') {
     $directory . "/sfsmallscreen.js\n" .
     $directory . "/sfautomaticwidth.js";
 
-  $sf_library = variable_get('superfish_slp', $slp_default);
   $sf_library = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", trim($sf_library));
   $sf_library = explode("\n", $sf_library);
 
