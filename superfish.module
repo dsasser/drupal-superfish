@@ -831,9 +831,9 @@ function superfish_block_save($delta = 0, $edit = array()) {
 }
 
 /**
- * Implements hook_block_contents().
+ * Implements hook_block_view().
  */
-function superfish_contents($delta = 0) {
+function superfish_block_view($delta = 0) {
   global $language;
   $block_css = $block_js = $sfsettings = $sfoptions = $sfplugins = array();
 
@@ -1180,11 +1180,11 @@ function superfish_contents($delta = 0) {
     'mlid' => $mlid,
     'sfsettings' => $sfsettings,
   );
-  if ($output = theme('superfish', $vars)) {
-    if (!empty($output['content'])) {
-      $output['content'] = array(
+  if ($block = theme('superfish', $vars)) {
+    if (!empty($block['content'])) {
+      $block['content'] = array(
         '#type' => 'markup',
-        '#markup' => $output['content'],
+        '#markup' => $block['content'],
         '#contextual_links' => array(
           'superfish' => array('admin/structure/menu/manage', array($menu_name)),
         ),
@@ -1201,7 +1201,7 @@ function superfish_contents($delta = 0) {
             $title = variable_get('superfish_smallamt_' . $delta, '');
             break;
         }
-        $sfplugins['smallscreen']['title'] = (empty($title)) ? $output['subject'] : $title;
+        $sfplugins['smallscreen']['title'] = (empty($title)) ? $block['subject'] : $title;
       }
       $sfplugins = superfish_array_filter($sfplugins);
 
@@ -1242,20 +1242,12 @@ function superfish_contents($delta = 0) {
           $block_css = array_merge($block_css, array($extracss => array('type' => 'file', 'weight' => 510)));
         }
       }
-      $output['content']['#attached'] = array(
+      $block['content']['#attached'] = array(
         'css' => $block_css,
         'js' => $block_js,
       );
     }
   }
-  return $output;
-}
-
-/**
- * Implements hook_block_view().
- */
-function superfish_block_view($delta = 0) {
-  $block = superfish_contents($delta);
   return $block;
 }
 
