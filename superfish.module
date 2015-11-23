@@ -848,13 +848,13 @@ function superfish_contents($delta = 0) {
   $sfsettings['itemcount'] = variable_get('superfish_itemcount_' . $delta, 1);
   $sfsettings['itemcounter'] = variable_get('superfish_itemcounter_' . $delta, 1);
   $sfsettings['itemdepth'] = variable_get('superfish_itemdepth' . $delta, 1);
-  $sfsettings['ulclass'] = variable_get('superfish_ulclass_' . $delta, '');
-  $sfsettings['liclass'] = variable_get('superfish_liclass_' . $delta, '');
-  $sfsettings['hlclass'] = variable_get('superfish_hlclass_' . $delta, '');
-  $sfsettings['wrapmul'] = variable_get('superfish_wrapmul_' . $delta, '');
-  $sfsettings['wrapul'] = variable_get('superfish_wrapul_' . $delta, '');
-  $sfsettings['wraphl'] = variable_get('superfish_wraphl_' . $delta, '');
-  $sfsettings['wraphlt'] = variable_get('superfish_wraphlt_' . $delta, '');
+  $sfsettings['ulclass'] = superfish_sanitize(variable_get('superfish_ulclass_' . $delta, ''), 'strict');
+  $sfsettings['liclass'] = superfish_sanitize(variable_get('superfish_liclass_' . $delta, ''), 'strict');
+  $sfsettings['hlclass'] = superfish_sanitize(variable_get('superfish_hlclass_' . $delta, ''), 'strict');
+  $sfsettings['wrapmul'] = superfish_sanitize(variable_get('superfish_wrapmul_' . $delta, ''));
+  $sfsettings['wrapul'] = superfish_sanitize(variable_get('superfish_wrapul_' . $delta, ''));
+  $sfsettings['wraphl'] = superfish_sanitize(variable_get('superfish_wraphl_' . $delta, ''));
+  $sfsettings['wraphlt'] = superfish_sanitize(variable_get('superfish_wraphlt_' . $delta, ''));
   $sfsettings['use_link_theme'] = variable_get('superfish_use_link_theme_' . $delta, 1);
   $sfsettings['use_item_theme'] = variable_get('superfish_use_item_theme_' . $delta, 1);
   $sfsettings['clone_parent'] = variable_get('superfish_clone_parent_' . $delta, 0);
@@ -1184,20 +1184,7 @@ function superfish_contents($delta = 0) {
     if (!empty($output['content'])) {
       $output['content'] = array(
         '#type' => 'markup',
-        '#markup' => filter_xss($output['content'], $allowed_tags = array('a',
-        'abbr', 'acronym', 'address', 'area', 'article', 'aside', 'audio', 'b',
-        'base', 'bdi', 'bdo', 'big', 'blockquote', 'br', 'button', 'canvas',
-        'caption', 'cite', 'code', 'col', 'colgroup', 'command', 'datalist',
-        'dd', 'del', 'details', 'dfn', 'div', 'dl', 'dt', 'em', 'embed',
-        'fieldset', 'figcaption', 'figure', 'footer', 'form', 'frame',
-        'frameset', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hgroup',
-        'hr', 'i', 'iframe', 'img', 'input', 'ins', 'kbd', 'keygen', 'label',
-        'legend', 'li', 'map', 'mark', 'meter', 'nav', 'noframes', 'noscript',
-        'object', 'ol', 'optgroup', 'option', 'output', 'p', 'param', 'pre',
-        'progress', 'q', 'rp', 'rt', 'ruby', 'samp', 'script', 'section',
-        'select', 'small', 'source', 'span', 'strong', 'sub', 'summary',
-        'sup', 'table', 'tbody', 'td', 'textarea', 'tfoot', 'th', 'thead',
-        'time', 'tr', 'track', 'tt', 'ul', 'var', 'video', 'wbr')),
+        '#markup' => $output['content'],
         '#contextual_links' => array(
           'superfish' => array('admin/structure/menu/manage', array($menu_name)),
         ),
@@ -1668,6 +1655,36 @@ function superfish_library($type = NULL, $name = NULL, $action = 'add') {
         break;
     }
   }
+}
+
+/**
+ * Sanitization function.
+ *
+ * @param string The input.
+ * @param mode Sanitization type.
+ *
+ * @return string
+ */
+function superfish_sanitize($string, $type = '') {
+  if ($type == 'strict') {
+    $allowed_tags = array();
+  } else {
+    $allowed_tags = array(
+      'a', 'abbr', 'acronym', 'address', 'area', 'article', 'aside', 'audio',
+      'b', 'base', 'bdi', 'bdo', 'big', 'blockquote', 'br', 'button', 'canvas',
+      'caption', 'cite', 'code', 'col', 'colgroup', 'command', 'datalist',
+      'dd', 'del', 'details', 'dfn', 'div', 'dl', 'dt', 'em', 'embed',
+      'fieldset', 'figcaption', 'figure', 'footer', 'form', 'frame',
+      'frameset', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hgroup',
+      'hr', 'i', 'iframe', 'img', 'ins', 'kbd', 'keygen', 'label',
+      'legend', 'li', 'map', 'mark', 'meter', 'nav', 'noframes', 'noscript',
+      'object', 'ol', 'optgroup', 'option', 'output', 'p', 'param', 'pre',
+      'progress', 'q', 'rp', 'rt', 'ruby', 'samp', 'section',
+      'select', 'small', 'source', 'span', 'strong', 'sub', 'summary',
+      'sup', 'table', 'tbody', 'td', 'textarea', 'tfoot', 'th', 'thead',
+      'time', 'tr', 'track', 'tt', 'ul', 'var', 'video', 'wbr');
+  }
+  return filter_xss($string, $allowed_tags);
 }
 
 /**
