@@ -1019,6 +1019,14 @@ function superfish_contents($delta = 0) {
     }
   }
 
+  // Unset hoverIntent if sfTouchscreen settings make it ineffective.
+  if (isset($sfplugins['touchscreen']['disableHover']) && $sfplugins['touchscreen']['disableHover'] === TRUE && $sfplugins['touchscreen']['mode'] == 'always_active') {
+    $hid = array_keys(superfish_library('javascript', 'hoverIntent', 'add'));
+    if (isset($block_js[$hid[0]])) {
+      unset($block_js[$hid[0]]);
+    }
+  }
+
   $smallscreen = variable_get('superfish_small_' . $delta, 2);
   if ($smallscreen > 0 && superfish_library('javascript', 'sfsmallscreen.js', 'check') == 1) {
     $block_js = array_merge($block_js, superfish_library('javascript', 'sfsmallscreen', 'add'));
