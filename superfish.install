@@ -47,7 +47,7 @@ function superfish_requirements($phase) {
     }
 
     // Check the uploaded Superfish library version.
-    if (superfish_library_version() != '1.2-beta2') {
+    if (superfish_library_version() != '1.2') {
       $requirements['superfish']['value'] = $t('Not supported');
       $requirements['superfish']['severity'] = REQUIREMENT_ERROR;
       $requirements['superfish']['description'] = $t('The Superfish library requires an update. You can find the update instructions on !link.', array('!link' => l($t('Superfish project homepage'), 'http://drupal.org/project/superfish')));
