@@ -172,7 +172,7 @@ function template_preprocess_superfish_menu_items(array &$variables) {
 
       // Hiding link descriptions (the "title" attribute).
       if ($settings['hide_linkdescription']) {
-        // TODO
+        $item['options']['attributes']['title'] = '';
       }
 
       // Sub-menu.

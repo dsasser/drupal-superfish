@@ -433,9 +433,7 @@ class SuperfishBlock extends SystemMenuBlock {
     );
     $form['sf-advanced']['sf-hyperlinks']['superfish_hide_linkdescription'] = array(
       '#type' => 'checkbox',
-      '#disabled' => TRUE,
       '#title' => $this->t('Disable hyperlink descriptions ("title" attribute)') . ' <em>(' . $this->t('Default') . ': ' . $this->t('disabled') . ')</em>',
-      '#description' => $this->t('(Not working at the moment.)'),
       '#default_value' => $this->configuration['hide_linkdescription'],
     );
     $form['sf-advanced']['sf-hyperlinks']['superfish_add_linkdescription'] = array(
