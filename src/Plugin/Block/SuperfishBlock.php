@@ -899,8 +899,7 @@ class SuperfishBlock extends SystemMenuBlock {
 
     // Menu tree.
     $level = $this->configuration['level'];
-    $parameters = $this->menuTree->getCurrentRouteMenuTreeParameters($menu_name);
-    $parameters->setMinDepth($level);
+    $parameters = $this->menuTree->getCurrentRouteMenuTreeParameters($menu_name)->setMinDepth($level)->onlyEnabledLinks();
     if ($sfsettings['depth']) {
       $parameters->setMaxDepth(min($level + ($sfsettings['depth'] - 1), $this->menuTree->maxDepth()));
     }
