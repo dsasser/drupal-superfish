@@ -910,6 +910,7 @@ class SuperfishBlock extends SystemMenuBlock {
     );
     $tree = $this->menuTree->transform($tree, $manipulators);
     // Expands all the children and returns.
+
     $tree = $this->expandAll($tree);
 
     // Unique HTML ID.
@@ -937,6 +938,12 @@ class SuperfishBlock extends SystemMenuBlock {
    * Loads the whole menu tree.
    */
   public function expandAll($tree) {
+    // Sorts the tree based on link "weights".
+    usort($tree, function($a, $b) {
+      $link_a = $a->link->getPluginDefinition();
+      $link_b = $b->link->getPluginDefinition();
+      return $link_a['weight'] - $link_b['weight'];
+    });
     foreach ($tree as $key => $element) {
        if ($element->hasChildren && null !== $element->link && !($element->link instanceof InaccessibleMenuLink)) {
         $menu_tree = \Drupal::menuTree();
