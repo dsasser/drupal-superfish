@@ -40,10 +40,10 @@ class SuperfishBlock extends SystemMenuBlock {
     $form['sf']['superfish_type'] = array(
       '#type' => 'radios',
       '#title' => $this->t('Menu type'),
-      '#description' => '<em>(' . $this->t('Default') . ': ' . $this->t('Horizontal') . ')</em>',
+      '#description' => '<em>(' . $this->t('Default') . ': ' . $this->t('Horizontal (single row)') . ')</em>',
       '#default_value' => $this->configuration['menu_type'],
       '#options' => array(
-        'horizontal' => $this->t('Horizontal (single row)') . ' <em>(' . $this->t('Default') . ')</em>',
+        'horizontal' => $this->t('Horizontal (single row)'),
         'navbar' => $this->t('Horizontal (double row)'),
         'vertical' => $this->t('Vertical (stack)')
       ),
@@ -411,7 +411,7 @@ class SuperfishBlock extends SystemMenuBlock {
     $form['sf-advanced']['sf-settings']['superfish_pathlevels'] = array(
       '#type' => 'select',
       '#title' => $this->t('Path levels'),
-      '#description' => $this->t('The amount of sub-menu levels that remain open or are restored using <strong>Path class</strong>.') . ' <em>(' . $this->t('Default') . ': 1)</em><br />' . t('Change this setting <strong>only and only</strong> if you are <strong>totally sure</strong> of what you are doing.'),
+      '#description' => $this->t('The amount of sub-menu levels that remain open or are restored using <strong>Path class</strong>.') . ' <em>(' . $this->t('Default') . ': 1)</em><br />' . $this->t('Change this setting <strong>only and only</strong> if you are <strong>totally sure</strong> of what you are doing.'),
       '#default_value' => $this->configuration['pathlevels'],
       '#options' => array_combine(range(0, 10),range(0, 10)),
     );
@@ -438,12 +438,12 @@ class SuperfishBlock extends SystemMenuBlock {
     );
     $form['sf-advanced']['sf-hyperlinks']['superfish_add_linkdescription'] = array(
       '#type' => 'checkbox',
-      '#title' => $this->t('Insert hyperlink descriptions ("title" attribute) into hyperlink texts.'),
+      '#title' => $this->t('Insert hyperlink descriptions ("title" attribute) into hyperlink texts.') . ' <em>(' . $this->t('Default') . ': ' . $this->t('disabled') . ')</em>',
       '#default_value' => $this->configuration['add_linkdescription'],
     );
     $form['sf-advanced']['sf-hyperlinks']['superfish_itemdepth'] = array(
       '#type' => 'checkbox',
-      '#title' => $this->t('Add <strong>item depth</strong> class to menu items and their hyperlinks.') . '<em>(sf-depth-1, sf-depth-2, sf-depth-3, ...)</em>',
+      '#title' => $this->t('Add <strong>item depth</strong> class to menu items and their hyperlinks.') . '<em>(sf-depth-1, sf-depth-2, sf-depth-3, ...)</em> <em>(' . $this->t('Default') . ': ' . $this->t('enabled') . ')</em>',
       '#default_value' => $this->configuration['link_depth_class'],
     );
     $form['sf-advanced']['sf-custom-classes'] = array(
