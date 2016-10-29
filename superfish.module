@@ -10,16 +10,6 @@ use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Component\Utility\SafeMarkup;
 
 /**
- * Implements hook_block_view_BASE_BLOCK_ID_alter().
- */
-function superfish_block_view_superfish_alter(array &$build, BlockPluginInterface $block) {
-  $menu_name = $block->getDerivativeId();
-  $build['#contextual_links']['menu'] = array(
-    'route_parameters' => array('menu' => $menu_name),
-  );
-}
-
-/**
  * Implements hook_libraries_info().
  */
 function superfish_libraries_info() {
