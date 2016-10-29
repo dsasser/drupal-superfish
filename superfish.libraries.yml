@@ -23,49 +23,42 @@ init:
     - core/jquery
 
 superfish_hoverintent:
-  version: VERSION
   js:
     ../../sites/all/libraries/superfish/jquery.hoverIntent.minified.js: { minified: true }
   dependencies:
     - superfish/init
 
 superfish_smallscreen:
-  version: VERSION
   js:
     ../../sites/all/libraries/superfish/sfsmallscreen.js: {}
   dependencies:
     - superfish/init
 
 superfish_touchscreen:
-  version: VERSION
   js:
     ../../sites/all/libraries/superfish/sftouchscreen.js: {}
   dependencies:
     - superfish/init
 
 superfish_supersubs:
-  version: VERSION
   js:
     ../../sites/all/libraries/superfish/supersubs.js: {}
   dependencies:
     - superfish/init
 
 superfish_supposition:
-  version: VERSION
   js:
     ../../sites/all/libraries/superfish/supposition.js: {}
   dependencies:
     - superfish/init
 
 superfish_easing:
-  version: VERSION
   js:
     ../../sites/all/libraries/easing/jquery.easing.js: {}
   dependencies:
     - superfish/init
 
 superfish_style_black:
-  version: VERSION
   css:
     theme:
       ../../sites/all/libraries/superfish/style/black/black.css: {}
@@ -73,7 +66,6 @@ superfish_style_black:
     - superfish/init
 
 superfish_style_blue:
-  version: VERSION
   css:
     theme:
       ../../sites/all/libraries/superfish/style/blue/blue.css: {}
@@ -81,7 +73,6 @@ superfish_style_blue:
     - superfish/init
 
 superfish_style_coffee:
-  version: VERSION
   css:
     theme:
       ../../sites/all/libraries/superfish/style/coffee/coffee.css: {}
@@ -89,7 +80,6 @@ superfish_style_coffee:
     - superfish/init
 
 superfish_style_default:
-  version: VERSION
   css:
     theme:
       ../../sites/all/libraries/superfish/style/default/default.css: {}
@@ -97,7 +87,6 @@ superfish_style_default:
     - superfish/init
 
 superfish_style_white:
-  version: VERSION
   css:
     theme:
       ../../sites/all/libraries/superfish/style/white/white.css: {}

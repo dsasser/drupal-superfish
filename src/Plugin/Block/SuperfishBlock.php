@@ -671,7 +671,7 @@ class SuperfishBlock extends SystemMenuBlock {
     $sfoptions['dropShadows'] = ($this->configuration['shadow'] == 0) ? FALSE : '';
 
     if ($this->configuration['hoverintent']) {
-      $build['#attached']['library'][] = 'superfish/superfish_hoverintent';
+      $build['#attached']['library'][] = 'superfish/hoverintent';
     }
     else {
       $sfoptions['disableHI'] = TRUE;
@@ -872,7 +872,6 @@ class SuperfishBlock extends SystemMenuBlock {
 
     // Attaching the requires JavaScript and CSS files.
     $build['#attached']['library'][] = 'superfish/superfish';
-    $build['#attached']['library'][] = 'superfish/superfish_'. $sfsettings['menu_type'];
     if ($sfsettings['style'] != 'none') {
       $build['#attached']['library'][] = 'superfish/superfish_style_'. $sfsettings['style'];
     }
