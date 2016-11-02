@@ -124,6 +124,18 @@ function template_preprocess_superfish_menu_items(array &$variables) {
         'hasChildren'   => $menu_item->hasChildren,
         'inActiveTrail' => $menu_item->inActiveTrail
       );
+      
+      // Adding the "is-active" class.
+      if (!isset($item['options']['external'])) {
+        $host = \Drupal::request()->getHttpHost();
+        $request_uri = \Drupal::request()->getRequestUri();
+        $current_url = Url::fromRoute('<current>');
+        $current_path = $current_url->toString();
+        $link_url = $item['url']->toString();
+        if ($link_url == $current_path || $link_url == $request_uri || $link_url == $host . $request_uri) {
+          $link_class[] = 'is-active';
+        }
+      }
 
       // Adding the necessary "active-trail" class.
       if (array_key_exists($key, $active_trails) || $item['inActiveTrail'] != FALSE) {
