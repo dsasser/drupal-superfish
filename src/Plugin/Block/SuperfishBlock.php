@@ -411,7 +411,7 @@ class SuperfishBlock extends SystemMenuBlock {
     $form['sf-advanced']['sf-settings']['superfish_pathlevels'] = array(
       '#type' => 'select',
       '#title' => $this->t('Path levels'),
-      '#description' => $this->t('The amount of sub-menu levels that remain open or are restored using <strong>Path class</strong>.') . ' <em>(' . $this->t('Default') . ': 1)</em><br />' . $this->t('Change this setting <strong>only and only</strong> if you are <strong>totally sure</strong> of what you are doing.'),
+      '#description' => $this->t('The amount of sub-menu levels that remain open or are restored using the ".active-trail" class.') . ' <em>(' . $this->t('Default') . ': 1)</em><br />' . $this->t('Change this setting <strong>only and only</strong> if you are <strong>totally sure</strong> of what you are doing.'),
       '#default_value' => $this->configuration['pathlevels'],
       '#options' => array_combine(range(0, 10),range(0, 10)),
     );
