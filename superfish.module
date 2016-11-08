@@ -95,7 +95,7 @@ function superfish_library_path($library = 'superfish') {
   elseif (file_exists('libraries/' . $library)) {
     $directory = 'libraries/' . $library;
   }
-  elseif (file_exists('sites/all/' . $library)) {
+  elseif (file_exists('sites/all/libraries/' . $library)) {
     $directory = 'sites/all/libraries/' . $library;
   }
   return $directory;
