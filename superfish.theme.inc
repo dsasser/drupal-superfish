@@ -124,9 +124,9 @@ function template_preprocess_superfish_menu_items(array &$variables) {
         'hasChildren'   => $menu_item->hasChildren,
         'inActiveTrail' => $menu_item->inActiveTrail
       );
-      
-      // Adding the "is-active" class.
+
       if (!isset($item['options']['external'])) {
+        // Adding the "is-active" class.
         $host = \Drupal::request()->getHttpHost();
         $request_uri = \Drupal::request()->getRequestUri();
         $current_url = Url::fromRoute('<current>');
@@ -135,13 +135,11 @@ function template_preprocess_superfish_menu_items(array &$variables) {
         if ($link_url == $current_path || $link_url == $request_uri || $link_url == $host . $request_uri) {
           $link_class[] = 'is-active';
         }
-      }
 
-      // Adding the necessary "active-trail" class.
-      if (!isset($item['options']['external']) && $menu_item->link->getUrlObject()->getRouteName() == '<front>' && count($active_trails) == 1 && isset($active_trails['']) && empty($active_trails['']) && \Drupal::service('path.matcher')->isFrontPage() == TRUE) {
-        $item_class[] = 'active-trail';
-      } elseif (array_key_exists($item['id'], $active_trails) || $item['inActiveTrail'] != FALSE) {
-        $item_class[] = 'active-trail';
+        // Adding the necessary "active-trail" class.
+        if (($menu_item->link->getUrlObject()->getRouteName() == '<front>' && \Drupal::service('path.matcher')->isFrontPage()) || array_key_exists($item['id'], $active_trails) || $item['inActiveTrail']) {
+          $item_class[] = 'active-trail';
+        }
       }
 
       // Add menu link depth classes to the <li> element and its link.
