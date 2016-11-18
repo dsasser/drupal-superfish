@@ -233,6 +233,9 @@ function template_preprocess_superfish_menu_items(array &$variables) {
       // Merging link classes.
       if (isset($item['options']['attributes']['class'])) {
         $link_class_current = $item['options']['attributes']['class'];
+        if (!is_array($link_class_current)) {
+          $link_class_current = array($link_class_current);
+        }
         $link_class = array_merge($link_class_current, superfish_array_remove_empty($link_class));
       }
       $item['options']['attributes']['class'] = superfish_array_remove_empty($link_class);
