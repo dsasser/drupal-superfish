@@ -671,7 +671,7 @@ class SuperfishBlock extends SystemMenuBlock {
     $sfoptions['dropShadows'] = ($this->configuration['shadow'] == 0) ? FALSE : '';
 
     if ($this->configuration['hoverintent']) {
-      $build['#attached']['library'][] = 'superfish/hoverintent';
+      $build['#attached']['library'][] = 'superfish/superfish_hoverintent';
     }
     else {
       $sfoptions['disableHI'] = TRUE;
