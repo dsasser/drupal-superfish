@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Plugin\Block\SuperfishBlock.
- */
-
 namespace Drupal\superfish\Plugin\Block;
 
 use Drupal\system\Plugin\Block\SystemMenuBlock;
