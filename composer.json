@@ -20,7 +20,7 @@
     {
       "type": "package",
       "package": {
-        "name": "Superfish-for-Drupal/superfish",
+        "name": "drupal/superfish-library",
         "version": "2",
         "type": "drupal-library",
         "dist": {
@@ -31,6 +31,12 @@
     }
   ],
   "require": {
-    "Superfish-for-Drupal/superfish": "2"
+    "composer/installers": "~1.0",
+    "drupal/superfish-library": "2.0"
+  },
+  "extra": {
+    "installer-paths": {
+      "libraries/superfish": ["type:drupal-library"]
+    }
   }
 }
