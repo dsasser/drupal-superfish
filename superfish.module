@@ -346,7 +346,13 @@ function superfish_help($route_name, RouteMatchInterface $route_match) {
       $output = array(
         '#theme' => 'superfish_help',
         '#title' => t('About Superfish'),
-        '#content' => t('Superfish integrates jQuery Superfish plugin with your Drupal menus. For more information see <a href="@url_superfish">Superfish library</a> or <a href="@url_module">Superfish Module</a>.', array('@url_superfish' => 'https://github.com/mehrpadin/Superfish-for-Drupal', '@url_module' => 'https://www.drupal.org/project/superfish')),
+        '#content' => t('<a href="@url_module">Superfish module</a> integrates <a href="@url_library">jQuery Superfish</a> plugin to your Drupal menu blocks. Please refer to the module <a href="@url_documentation">documentation</a> for more information.',
+			array(
+				'@url_library' => 'https://github.com/mehrpadin/Superfish-for-Drupal',
+				'@url_module' => 'https://www.drupal.org/project/superfish',
+				'@url_documentation' => 'https://www.drupal.org/node/1125896'
+			)
+		),
       );
       return $output;
   }
