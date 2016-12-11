@@ -8,6 +8,7 @@
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Implements hook_block_view_BASE_BLOCK_ID_alter().
@@ -325,6 +326,28 @@ function superfish_theme($existing, $type, $theme, $path) {
     'superfish_menu_items' => array(
       'render element' => 'element',
       'file' => 'superfish.theme.inc',
-    )
+    ),
+    'superfish_help' => array(
+      'variables' => array(
+        'title' => NULL,
+        'content' => NULL,
+      ),
+      'template' => 'superfish--help',
+    ),
   );
+}
+
+/**
+ * Implements hook_help().
+ */
+function superfish_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.superfish':
+      $output = array(
+        '#theme' => 'superfish_help',
+        '#title' => t('About Superfish'),
+        '#content' => t('Superfish integrates jQuery Superfish plugin with your Drupal menus. For more information see <a href="@url_superfish">Superfish library</a> or <a href="@url_module">Superfish Module</a>.', array('@url_superfish' => 'https://github.com/mehrpadin/Superfish-for-Drupal', '@url_module' => 'https://www.drupal.org/project/superfish')),
+      );
+      return $output;
+  }
 }
