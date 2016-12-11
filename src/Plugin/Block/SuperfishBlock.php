@@ -891,19 +891,24 @@ class SuperfishBlock extends SystemMenuBlock {
 
     // Menu tree.
     $level = $this->configuration['level'];
-    $parameters = $this->menuTree->getCurrentRouteMenuTreeParameters($menu_name)->setMinDepth($level)->onlyEnabledLinks();
-    if ($sfsettings['depth']) {
-      $parameters->setMaxDepth(min($level + ($sfsettings['depth'] - 1), $this->menuTree->maxDepth()));
-    }
+    // Menu display depth.
+    $depth = $sfsettings['depth'];
+
+    // By not setting the any expanded parents we don't limit the loading of the subtrees.
+    // Calling MenuLinkTreeInterface::getCurrentRouteMenuTreeParameters we would be
+    // doing so. We don't actually need the parents expanded as we do different rendering.
+    $parameters = (new MenuTreeParameters())
+      ->setMinDepth($level)
+      ->setMaxDepth($depth ? min($level + ($depth - 1), $this->menuTree->maxDepth()) : NULL)
+      ->setActiveTrail($this->menuActiveTrail->getActiveTrailIds($menu_name))
+      ->onlyEnabledLinks();
+
     $tree = $this->menuTree->load($menu_name, $parameters);
     $manipulators = array(
       ['callable' => 'menu.default_tree_manipulators:checkAccess'],
       ['callable' => 'menu.default_tree_manipulators:generateIndexAndSort']
     );
     $tree = $this->menuTree->transform($tree, $manipulators);
-    // Expands all the children and returns.
-
-    $tree = $this->expandAll($tree);
 
     // Unique HTML ID.
     $html_id = Html::getUniqueId('superfish-' . $menu_name);
@@ -923,37 +928,11 @@ class SuperfishBlock extends SystemMenuBlock {
       '#tree' => $tree,
       '#settings' => $sfsettings
     );
+    // Build the original menu tree to calculate cache tags and contexts.
+    $treeBuild = $this->menuTree->build($tree);
+    $build['#cache'] = $treeBuild['#cache'];
+
     return $build;
-  }
-
-  /**
-   * Loads the whole menu tree.
-   */
-  public function expandAll($tree, $currentDepth = 1) {
-    $maxDepth = $this->configuration['depth'];
-    if ($maxDepth != 0 && $currentDepth >= $maxDepth) {
-      return $tree;
-    }
-
-    // Sorts the tree based on link "weights".
-    usort($tree, function($a, $b) {
-      $link_a = $a->link->getPluginDefinition();
-      $link_b = $b->link->getPluginDefinition();
-      return $link_a['weight'] - $link_b['weight'];
-    });
-    foreach ($tree as $key => $element) {
-       if ($element->hasChildren && null !== $element->link && !($element->link instanceof InaccessibleMenuLink)) {
-        $menu_tree = \Drupal::menuTree();
-        $parameters = new MenuTreeParameters();
-        $parameters->setRoot($element->link->getPluginId())->excludeRoot()->setMaxDepth(1)->onlyEnabledLinks();
-        $subtree = $menu_tree->load(NULL, $parameters);
-        if ($subtree) {
-          $nextDepth = $currentDepth + 1;
-          $tree[$key]->subtree = $this->expandAll($subtree, $nextDepth);
-        }
-      }
-    }
-    return $tree;
   }
 
   /**
