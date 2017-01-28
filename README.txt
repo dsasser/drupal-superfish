@@ -8,11 +8,35 @@ This module allows for integration of jQuery Superfish plug-in with Drupal CMS.
 Requirement
 -----------
 - Superfish library.
-  Link: http://drupal.org/mehrpadin/Superfish-for-Drupal/
+  Link: https://github.com/mehrpadin/Superfish-for-Drupal/
 
 
-Installation instructions
--------------------------
+Installation instructions (composer)
+------------------------------------
+1. Add the proper repository to your composer.json file
+    {
+      "type": "package",
+      "package": {
+        "name": "drupal-superfish/superfish",
+        "version": "2.0",
+        "type": "drupal-library",
+        "dist": {
+          "url": "https://github.com/mehrpadin/Superfish-for-Drupal/archive/2.x.zip",
+          "type": "zip"
+        }
+      }
+    }
+
+2. Require the library
+   $ composer require drupal-superfish/superfish:2.0
+
+3. Go to "Administer" -> "Modules" and enable the module.
+
+4. Go to "Administer" -> "Structure" -> "Block layout" -> click a "Place block" button to add a Superfish block to a region.
+
+
+Installation instructions (manual)
+----------------------------------
 1. Download and extract the Superfish library into the libraries directory (usually "sites/all/libraries").
    Link: https://github.com/mehrpadin/Superfish-for-Drupal/zipball/2.x
 
