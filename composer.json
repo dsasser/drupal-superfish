@@ -15,7 +15,7 @@
     "source": "https://cgit.drupalcode.org/superfish"
   },
   "license": "GPL-2.0+",
-  "minimum-stability": "dev",
+  "minimum-stability": "stable",
   "repositories": [
     {
       "type": "package",
@@ -31,12 +31,12 @@
     }
   ],
   "require": {
-    "composer/installers": "~1.0",
-    "mehrpadin/superfish": "2.0"
+    "composer/installers": "^1.0.24",
+    "mehrpadin/superfish": "~2.0"
   },
   "extra": {
     "installer-paths": {
-      "libraries/superfish": ["type:drupal-library"]
+      "libraries/{$name}": ["drupal-library"]
     }
   }
 }
