@@ -31,13 +31,12 @@
     }
   ],
   "require": {
-    "oomphinc/composer-installers-extender": "^1.1.*",
     "composer/installers": "^1.0.24",
     "mehrpadin/superfish": "~2.0"
   },
   "extra": {
     "installer-paths": {
-      "libraries/{$name}": ["type:drupal-library"]
+      "libraries/{$name}": ["drupal-library"]
     }
   }
 }
